@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Lab 3 - Shader programs</string>
+   <string>Final Project - Goblet of SMOKE</string>
   </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>22</height>
+     <height>31</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -34,7 +34,7 @@
   <widget class="QDockWidget" name="settingsDock">
    <property name="minimumSize">
     <size>
-     <width>145</width>
+     <width>147</width>
      <height>211</height>
     </size>
    </property>
