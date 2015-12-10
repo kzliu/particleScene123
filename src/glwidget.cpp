@@ -119,7 +119,7 @@ void GLWidget::createTexture(const GLuint &textureID)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void GLWidget::setTextureImage(const GLuint &textureID, QImage image)
@@ -131,6 +131,7 @@ void GLWidget::setTextureImage(const GLuint &textureID, QImage image)
     } else {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
     }
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void GLWidget::swapTextures()
