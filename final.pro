@@ -19,7 +19,8 @@ SOURCES += src/settings.cpp \
     src/databinding.cpp \
     cs123_lib/resourceloader.cpp \
     src/openglshape.cpp \
-    glew-1.10.0/src/glew.c
+    glew-1.10.0/src/glew.c \
+    src/FramebufferObject.cpp
 
 
 HEADERS += \
@@ -29,7 +30,8 @@ HEADERS += \
     src/databinding.h \
     cs123_lib/resourceloader.h \
     src/openglshape.h \
-    glew-1.10.0/include/GL/glew.h
+    glew-1.10.0/include/GL/glew.h \
+    src/FramebufferObject.h
 
 FORMS += src/mainwindow.ui
 
