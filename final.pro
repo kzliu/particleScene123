@@ -20,7 +20,8 @@ SOURCES += src/settings.cpp \
     cs123_lib/resourceloader.cpp \
     src/openglshape.cpp \
     glew-1.10.0/src/glew.c \
-    src/FramebufferObject.cpp
+    src/FramebufferObject.cpp \
+    src/ParticleSystem.cpp
 
 
 HEADERS += \
@@ -31,7 +32,8 @@ HEADERS += \
     cs123_lib/resourceloader.h \
     src/openglshape.h \
     glew-1.10.0/include/GL/glew.h \
-    src/FramebufferObject.h
+    src/FramebufferObject.h \
+    src/ParticleSystem.h
 
 FORMS += src/mainwindow.ui
 
