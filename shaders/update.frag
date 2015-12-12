@@ -5,11 +5,28 @@ uniform sampler2D position
 uniform sampler2D velocity;
 uniform int derivative;
 
-const float BASE = 255.f;
-const float OFFSET = BASE * BASE / 2.f;
+in float scale;
+in float random;
 
-float decode()
+const float BASE 255.f;
+const float OFFSET (BASE * BASE / 2.f);
 
+
+float encode(float value) {
+    value = value *scale + OFFSET;
+    float x = mod(value, BASE);
+    float y = floor(value, BASE);
+    return vec2(x,y) /BASE;
+}
+
+
+float decode(vec2 channels){
+    return (dot(channels, vec2(BASE, BASE*BASE)) - OFFSET) / scale;
+}
+
+vec2 updatePosition(){
+
+}
 
 void main(void)
 {
