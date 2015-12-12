@@ -2,6 +2,7 @@
 #define PARTICLESYSTEM_H
 
 #include "GL/glew.h"
+#include <QImage>
 
 class FramebufferObject;
 
@@ -25,12 +26,18 @@ public:
     /** Setting and binding the active texture */
     void bindActiveTexture(GLuint textureID, GLenum textureUnit);
 
+    /** Initialize the position and velocity */
+    void initializePositionAndVelocity();
+
 private:
     GLuint m_p0_textureID;
     GLuint m_p1_textureID;
 
     GLuint m_v0_textureID;
     GLuint m_v1_textureID;
+
+    GLuint m_particle_texture_width;
+    GLuint m_particle_texture_height;
 };
 
 #endif // PARTICLESYSTEM_H

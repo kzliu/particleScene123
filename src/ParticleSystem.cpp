@@ -50,6 +50,11 @@ void ParticleSystem::setTextureImage(const GLuint &textureID, QImage image)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void ParticleSystem::initializePositionAndVelocity()
+{
+
+}
+
 void ParticleSystem::update(FramebufferObject fbo, GLuint updateShaderProgram)
 {
     // This disables Gl blending the computed fragment colors with the values in the color buffers
