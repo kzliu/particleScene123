@@ -60,10 +60,6 @@ void GLWidget::initializeGL()
     m_square->setAttribute(1, 3, GL_FLOAT, GL_FALSE, 32, 12);
     m_square->setAttribute(2, 2, GL_FLOAT, GL_FALSE, 32, 24);
 
-
-
-
-
     // TODO (Task 6): Initialize texture map.
     QImage image(":/images/ostrich.jpg");
     glGenTextures(1,&m_textureID);

@@ -50,11 +50,51 @@ void ParticleSystem::setTextureImage(const GLuint &textureID, QImage image)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void ParticleSystem::update(FramebufferObject fbo)
+void ParticleSystem::update(FramebufferObject fbo, GLuint updateShaderProgram)
 {
     // This disables Gl blending the computed fragment colors with the values in the color buffers
     glDisable(GL_BLEND);
+
     // We begin by updating the positions texture
     fbo.attach(m_p1_textureID);
 
+    // We bind the position and velocity textures to specific locations to be read by the shader
+    bindActiveTexture(m_p0_textureID, 0);
+    bindActiveTexture(m_v0_textureID, 1);
+
+    // We use the update shader program
+    glUseProgram(updateShaderProgram);
+
+    // TODO: We're meant to do something with the quad here
+
+    // Here we pass the shader our position and velocity textures
+    glUniform1i(glGetUniformLocation(updateShaderProgram, "position"), 0);
+    glUniform1i(glGetUniformLocation(updateShaderProgram, "velocity"), 1);
+    // Now we send it specific values
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), (GLfloat)rand() * 2.f - 1.f);
+    glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 0);
+
+    // TODO: DRAW
+
+    // Next we update the velocity texture
+    fbo.attach(m_v1_textureID);
+
+    // We send the shader specific values this time to calculate velocity
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), (GLfloat)rand() * 2.f - 1.f);
+    glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 1);
+
+    // TODO: DRAW
+
+    swapTextures();
+
+    glUseProgram(0);
+}
+
+void ParticleSystem::bindActiveTexture(GLuint textureID, GLenum textureUnit)
+{
+    if(unit > 0)
+    {
+        glActiveTexture(GL_TEXTURE0 + textureUnit);
+    }
+    glBindTexture(GL_TEXTURE_2D, textureID);
 }

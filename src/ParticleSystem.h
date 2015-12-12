@@ -20,7 +20,10 @@ public:
     void swapTextures();
 
     /** Moves the particle system forward by one iteration */
-    void update(FramebufferObject fbo);
+    void update(FramebufferObject fbo, GLuint updateShaderProgram);
+
+    /** Setting and binding the active texture */
+    void bindActiveTexture(GLuint textureID, GLenum textureUnit);
 
 private:
     GLuint m_p0_textureID;
