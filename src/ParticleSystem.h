@@ -12,7 +12,7 @@ public:
     ParticleSystem();
 
     /** This creates a texture */
-    void createTexture(const GLuint &textureID);
+    void createTexture(GLuint &textureID);
 
     /** This sets the content of a texture */
     void setTextureImage(const GLuint &textureID, QImage image);

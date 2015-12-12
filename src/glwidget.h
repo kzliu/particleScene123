@@ -10,6 +10,7 @@
 #include <memory>
 #include <QGLWidget>
 #include <QTimer>
+#include "FramebufferObject.h"
 
 class OpenGLShape;
 
@@ -36,6 +37,10 @@ private:
     GLuint m_solidProgramID;
     GLuint m_gradientProgramID;
     GLuint m_textureProgramID;
+
+
+    std::unique_ptr<FramebufferObject> m_FBO1;
+    std::unique_ptr<FramebufferObject> m_FBO2;
 
     GLuint m_textureID;
 };

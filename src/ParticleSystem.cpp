@@ -5,7 +5,9 @@ ParticleSystem::ParticleSystem()
     : m_p0_textureID(0),
       m_p1_textureID(0),
       m_v0_textureID(0),
-      m_v1_textureID(0)
+      m_v1_textureID(0),
+      m_particle_texture_width(50),
+      m_particle_texture_height(50)
 {
     // Initializing the position and velocity textures
     createTexture(m_p0_textureID);
@@ -14,11 +16,11 @@ ParticleSystem::ParticleSystem()
     createTexture(m_v1_textureID);
 }
 
-void ParticleSystem::createTexture(const GLuint &textureID)
+void ParticleSystem::createTexture(GLuint &textureID)
 {
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_particle_texture_width, m_particle_texture_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -41,7 +43,7 @@ void ParticleSystem::swapTextures()
 void ParticleSystem::setTextureImage(const GLuint &textureID, QImage image)
 {
     glBindTexture(GL_TEXTURE_2D, textureID);
-    if(image == NULL)
+    if(image.isNull())
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     } else {
@@ -97,7 +99,7 @@ void ParticleSystem::update(FramebufferObject fbo, GLuint updateShaderProgram)
 
 void ParticleSystem::bindActiveTexture(GLuint textureID, GLenum textureUnit)
 {
-    if(unit > 0)
+    if(textureUnit > 0)
     {
         glActiveTexture(GL_TEXTURE0 + textureUnit);
     }
