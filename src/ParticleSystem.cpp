@@ -82,10 +82,10 @@ void ParticleSystem::initializePositionAndVelocity()
         for (unsigned int x = 0; x < m_particle_texture_width; x++){
             int index = y * m_particle_texture_width + x;
             // TODO: check this out in debugging
-            glm::vec2 p_x = encode((GLfloat)rand() * m_canvas_width, m_scale_p);
+            glm::vec2 p_x = encode(rand() % m_canvas_width, m_scale_p);
             glm::vec2 p_y = encode(0.5f * m_canvas_height, m_scale_p);
-            glm::vec2 v_x = encode((GLfloat)rand() * 1.f - 0.5f, m_scale_v);
-            glm::vec2 v_y = encode((GLfloat)rand() * 2.5f, m_scale_v);
+            glm::vec2 v_x = encode(rand() % 1 - 0.5f, m_scale_v);
+            glm::vec2 v_y = encode(-1.f * (rand() % 2), m_scale_v);
 
             QRgb p_c = qRgba(p_x[0], p_x[1], p_y[0], p_y[1]);
             QRgb v_c = qRgba(v_x[0], v_x[1], v_y[0], v_y[1]);
