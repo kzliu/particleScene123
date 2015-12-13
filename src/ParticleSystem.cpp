@@ -196,3 +196,11 @@ void ParticleSystem::bindActiveTexture(const GLuint &textureID, GLenum textureUn
     }
     glBindTexture(GL_TEXTURE_2D, textureID);
 }
+
+GLuint ParticleSystem::get_p0texture(){
+    return m_p0_textureID;
+}
+
+GLuint ParticleSystem::get_v0texture(){
+    return m_v0_textureID;
+}
