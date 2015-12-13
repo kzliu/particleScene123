@@ -81,7 +81,7 @@ void GLWidget::paintGL()
     float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
     glm::vec2 scale = glm::vec2(s, s*100);
 
-    ParticleSystem *particles = new ParticleSystem(100, 100, this->height(), this->width(), scale[0], scale[1], 5, qRgba(255,0,0,0));
+    ParticleSystem *particles = new ParticleSystem(100, 100, this->width(), this->height(), scale[0], scale[1], 5, qRgba(255,0,0,0));
 
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
@@ -113,22 +113,65 @@ void GLWidget::paintGL()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        glUseProgram(0);
+//        particles->update(m_updateProgramID, m_square);
 
-        glViewport(0,0,this->width(),this->height());
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        m_FBO2->attach(particles->get_p1texture());
 
-        glUseProgram(m_updateProgramID);
+//        glUseProgram(0);
 
         particles->updatePosition(m_updateProgramID);
 
-        particles->updateVelocity(m_updateProgramID);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_square->draw();
+//        glUseProgram(m_updateProgramID);
+
+
+//        glUniform1i(glGetUniformLocation(m_updateProgramID, "position"), 0);
+//        glUniform1i(glGetUniformLocation(m_updateProgramID, "velocity"), 1);
+
+//        particles->bindActiveTexture(particles->get_p0texture(), 0);
+//        particles->bindActiveTexture(particles->get_v0texture(), 1);
+
+//        glUniform1f(glGetUniformLocation(m_updateProgramID, "pscale"), scale[0]);
+//        glUniform1f(glGetUniformLocation(m_updateProgramID, "vscale"), scale[1]);
+
+//        glUniform2i(glGetUniformLocation(m_updateProgramID, "worlddimensions"), this->width(), this->height());
+//        glUniform1f(glGetUniformLocation(m_updateProgramID, "random"), rand() % 2 - 1.f);
+//        glUniform1i(glGetUniformLocation(m_updateProgramID, "derivative"), 0);
+
+//        m_square->draw();
+
+//        glBindTexture(GL_TEXTURE_2D,particles->get_p1texture());
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+
+//        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+//        glUseProgram(0);
+
+//        glViewport(0,0,this->width(),this->height());
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+//        glUseProgram(m_updateProgramID);
+
+//        glUniform1i(glGetUniformLocation(m_updateProgramID, "position"), 0);
+//        glUniform1i(glGetUniformLocation(m_updateProgramID, "velocity"), 1);
+
+//        particles->bindActiveTexture(particles->get_p0texture(), 0);
+//        particles->bindActiveTexture(particles->get_v0texture(), 1);
+
+//        glUniform1f(glGetUniformLocation(m_updateProgramID, "pscale"), scale[0]);
+//        glUniform1f(glGetUniformLocation(m_updateProgramID, "vscale"), scale[1]);
+
+//        glUniform2i(glGetUniformLocation(m_updateProgramID, "worlddimensions"), this->width(), this->height());
+
+//        glUniform1f(glGetUniformLocation(m_updateProgramID, "random"), rand() % 2 - 1.f);
+//        glUniform1i(glGetUniformLocation(m_updateProgramID, "derivative"), 1);
+
+//        m_square->draw();
 
 //        glBindTexture(GL_TEXTURE_2D,0);
-        glUseProgram(0);
+//        glUseProgram(0);
         break;
 
     case GRADIENT_SHADER_PROGRAM:
