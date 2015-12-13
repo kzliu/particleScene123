@@ -143,62 +143,57 @@ void ParticleSystem::update(GLuint &updateShaderProgram, std::unique_ptr<OpenGLS
     // This disables Gl blending the computed fragment colors with the values in the color buffers
     glDisable(GL_BLEND);
 
-//    m_FBO1->attach(m_p1_textureID);
+
+    m_FBO2->attach(m_p1_textureID);
+//        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+//    glUseProgram(0);
+
+
+
+    glUseProgram(updateShaderProgram);
+
+    bindActiveTexture(m_p0_textureID, 0);
+    bindActiveTexture(m_v0_textureID, 1);
+
+//    glViewport(0,0,m_particle_texture_width,m_particle_texture_height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glUniform1i(glGetUniformLocation(updateShaderProgram, "position"), 0);
+    glUniform1i(glGetUniformLocation(updateShaderProgram, "velocity"), 1);
+
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "pscale"), m_scale_p);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "vscale"), m_scale_v);
+
+    glUniform2i(glGetUniformLocation(updateShaderProgram, "worlddimensions"), m_canvas_width, m_canvas_height);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2 - 1.f);
+    glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 0);
+
+    m_square->draw();
+
+    glBindTexture(GL_TEXTURE_2D,get_p1texture());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glUseProgram(0);
+//    m_FBO2->attach(m_v1_textureID);
+
+//    glUseProgram(0);
 
     glViewport(0,0,m_canvas_width,m_canvas_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // We begin by updating the positions texture
-
-    // We use the update shader program
-    glUseProgram(updateShaderProgram);
-
-    // Here we pass the shader our position and velocity textures
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "position"), 0);
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "velocity"), 1);
-
-
-
-    // We bind the position and velocity textures to specific locations to be read by the shader
-//    glActiveTexture(GL_TEXTURE0);
-//    glBindTexture(GL_TEXTURE_2D, m_p0_textureID);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, m_v0_textureID);
-
-
-    // Now we send it specific values
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2 - 1.f);
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 0);
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "pscale"), m_scale_p);
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "vscale"), m_scale_v);
-
-    // Now, we draw
-//    m_square->draw();
-
-//    glBindTexture(GL_TEXTURE_2D, m_p1_textureID);
-
-//    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-//    glUseProgram(0);
-
-//    glViewport(0,0,m_canvas_width,m_canvas_height);
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //    glUseProgram(updateShaderProgram);
-//    m_square->draw();
 
-//    // Next we update the velocity texture
-//    fbo.attach(m_v1_textureID);
+    bindActiveTexture(m_p0_textureID, 0);
+    bindActiveTexture(m_v0_textureID, 1);
 
-//    // We send the shader specific values this time to calculate velocity
-//    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2 - 1.f);
-//    glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 1);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2 - 1.f);
+    glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 1);
 
-//    // We draw again
-//    quad.draw();
+    m_square->draw();
+
+    glBindTexture(GL_TEXTURE_2D,0);
 
 //    swapTextures();
 
