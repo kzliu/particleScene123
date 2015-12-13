@@ -46,10 +46,6 @@ public:
 
     GLuint get_v0texture();
 
-    GLuint get_p0texture();
-
-    GLuint get_v0texture();
-
     GLuint get_p1texture();
 
     GLuint get_v1texture();

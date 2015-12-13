@@ -15,7 +15,7 @@ const int BASE = 255;
 const int OFFSET = (BASE * BASE / 2);
 
 
-void encode(in int value, in int scale, out vec2 xy) {
+void encode(in float value, in float scale, out vec2 xy) {
     value = value * scale + OFFSET;
     xy.x = mod(value, BASE) /BASE ;
     xy.y = floor(value / BASE) / BASE;
@@ -70,15 +70,15 @@ void main()
     vec2 v = vec2(vx,vy);
 
     vec2 result;
-    int s;
+    float s;
     if (derivative == 0) {
         updatePosition(p, v);
         result = p;
         s = pscale;
-//    } else {
-//        updateVelocity(p, v);
-//        result = v;
-//        s = vscale;
+    } else {
+        updateVelocity(p, v);
+        result = v;
+        s = vscale;
     }
 
 
