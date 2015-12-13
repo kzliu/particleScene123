@@ -40,6 +40,10 @@ public:
 
     /** Initialize the position and velocity */
     void initializePositionAndVelocity();
+    
+    GLuint get_p0texture();
+
+    GLuint get_v0texture();
 
 private:
     GLuint m_p0_textureID;
