@@ -37,6 +37,7 @@ private:
     GLuint m_solidProgramID;
     GLuint m_gradientProgramID;
     GLuint m_textureProgramID;
+    GLuint m_updateProgramID;
 
 
     std::unique_ptr<FramebufferObject> m_FBO1;
