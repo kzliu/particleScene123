@@ -8,7 +8,9 @@
 #include "glm/gtx/transform.hpp"  // glm::translate, scale, rotate
 #include "glm/gtc/type_ptr.hpp"   // glm::value_ptr
 
+//#include <QImage>
 #include "openglshape.h"
+#include "ParticleSystem.h"
 
 GLWidget::GLWidget(QGLFormat format, QWidget *parent)
     : QGLWidget(format, parent),
@@ -76,6 +78,11 @@ void GLWidget::paintGL()
 {
 //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
+    glm::vec2 scale = glm::vec2(s, s*100);
+
+    ParticleSystem *particles = new ParticleSystem(100, 100, this->height(), this->width(), scale[0], scale[1], 5, qRgba(255,0,0,0));
+
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
         GLuint m_colorTextureID;
@@ -112,7 +119,30 @@ void GLWidget::paintGL()
         glViewport(0,0,this->width(),this->height());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(m_textureProgramID);
+        glUseProgram(m_updateProgramID);
+
+        glUniform1i(glGetUniformLocation(m_updateProgramID, "position"), 0);
+        glUniform1i(glGetUniformLocation(m_updateProgramID, "velocity"), 1);
+
+        particles->bindActiveTexture(particles->get_p0texture(), 0);
+        particles->bindActiveTexture(particles->get_v0texture(), 1);
+
+        glUniform1f(glGetUniformLocation(m_updateProgramID, "pscale"), scale[0]);
+        glUniform1f(glGetUniformLocation(m_updateProgramID, "vscale"), scale[1]);
+
+        glUniform2i(glGetUniformLocation(m_updateProgramID, "worlddimensions"), this->width(), this->height());
+        glUniform1f(glGetUniformLocation(m_updateProgramID, "random"), rand() % 2 - 1.f);
+        glUniform1i(glGetUniformLocation(m_updateProgramID, "derivative"), 0);
+
+        glUniform1f(glGetUniformLocation(m_updateProgramID, "random"), rand() % 2 - 1.f);
+        glUniform1i(glGetUniformLocation(m_updateProgramID, "derivative"), 1);
+
+//        glUniform2fv(glGetUniformLocation(m_textureProgramID, "scale"), 2, scale);
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, particles->get_p0texture());
+
+//        glActiveTexture(GL_TEXTURE1);
+//        glBindTexture(GL_TEXTURE_2D, particles->get_v0texture());
 //        glBindTexture(GL_TEXTURE_2D, m_textureID);
         m_square->draw();
 
@@ -127,12 +157,15 @@ void GLWidget::paintGL()
         m_square->draw();
         break;
     case TEXTURE_SHADER_PROGRAM:
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // TODO (Task 8): Draw the square using m_textureProgramID.
-        glUseProgram(m_textureProgramID);
-        glBindTexture(GL_TEXTURE_2D, m_textureID);
-        m_square->draw();
-        glBindTexture(GL_TEXTURE_2D,0);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        // TODO (Task 8): Draw the square using m_textureProgramID.
+
+////        particles->update(m_FBO1, m_textureProgramID, m_square); <- trouble passing the fbo
+//        particles->update(m_updateProgramID, m_square);
+////        glUseProgram(m_textureProgramID);
+//        glBindTexture(GL_TEXTURE_2D, particles->get_p0texture());
+//        m_square->draw();
+//        glBindTexture(GL_TEXTURE_2D,0);
         break;
     }
     glUseProgram(0);
