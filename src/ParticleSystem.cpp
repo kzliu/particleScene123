@@ -102,7 +102,7 @@ void ParticleSystem::initializePositionAndVelocity()
     delete velocity_texture;
 }
 
-void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderProgram, OpenGLShape quad)
+void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderProgram, const OpenGLShape &quad)
 {
     // This disables Gl blending the computed fragment colors with the values in the color buffers
     glDisable(GL_BLEND);
@@ -147,7 +147,7 @@ void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderPro
     glUseProgram(0);
 }
 
-void ParticleSystem::draw(const GLuint &drawShaderProgram, OpenGLShape points)
+void ParticleSystem::draw(const GLuint &drawShaderProgram, const OpenGLShape &points)
 {
     // This enables Gl blending the computed fragment colors with the values in the color buffers
     glEnable(GL_BLEND);
