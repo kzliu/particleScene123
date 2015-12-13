@@ -4,12 +4,21 @@
 #include "GL/glew.h"
 #include <QImage>
 
+#include "glm/glm.hpp"            // glm::vec*, mat*, and basic glm functions
+#include "glm/gtx/transform.hpp"  // glm::translate, scale, rotate
+#include "glm/gtc/type_ptr.hpp"   // glm::value_ptr
+
+class OpenGLShape;
 class FramebufferObject;
+class Qrgb;
 
 class ParticleSystem
 {
 public:
-    ParticleSystem();
+    ParticleSystem(int texture_width, int texture_height, int canvas_width, int canvas_height, GLfloat scale_p, GLfloat scale_v, GLfloat particle_size, Qrgb particle_color);
+
+    /** Encodes a value given the scale */
+    glm::vec2<GLfloat> encode(GLfloat value, GLfloat scale);
 
     /** This creates a texture */
     void createTexture(const GLuint &textureID);
@@ -21,7 +30,10 @@ public:
     void swapTextures();
 
     /** Moves the particle system forward by one iteration */
-    void update(FramebufferObject fbo, GLuint updateShaderProgram);
+    void update(FramebufferObject fbo, GLuint updateShaderProgram, OpenGLShape quad);
+
+    /** Draws the current state */
+    void draw(GLuint drawShaderProgram, OpenGLShape points);
 
     /** Setting and binding the active texture */
     void bindActiveTexture(GLuint textureID, GLenum textureUnit);
@@ -38,6 +50,15 @@ private:
 
     GLuint m_particle_texture_width;
     GLuint m_particle_texture_height;
+
+    GLuint m_canvas_width;
+    GLuint m_canvas_height;
+
+    GLfloat m_scale_p;
+    GLfloat m_scale_v;
+
+    GLfloat m_particle_size;
+    Qrgb m_particle_color;
 };
 
 #endif // PARTICLESYSTEM_H
