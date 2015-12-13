@@ -112,7 +112,7 @@ void GLWidget::paintGL()
         glViewport(0,0,this->width(),this->height());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(m_textureProgramID);
+        glUseProgram(m_updateProgramID);
 //        glBindTexture(GL_TEXTURE_2D, m_textureID);
         m_square->draw();
 
