@@ -7,5 +7,7 @@
         <file>texture.frag</file>
         <file>texture.vert</file>
         <file>update.frag</file>
+        <file>draw.frag</file>
+        <file>draw.vert</file>
     </qresource>
 </RCC>

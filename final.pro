@@ -45,6 +45,8 @@ OTHER_FILES += \
     shaders/texture.frag \
     shaders/texture.vert \
     shaders/update.frag\
+    shaders/draw.frag \
+    shaders/draw.vert
 
 RESOURCES += \
     shaders/shaders.qrc \
