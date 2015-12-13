@@ -5,24 +5,24 @@ uniform sampler2D position
 uniform sampler2D velocity;
 uniform float random;
 uniform int derivative;
-uniform float pscale;
-uniform float vscale;
+uniform int pscale;
+uniform int vscale;
 uniform vec2 worlddimensions;
 varying vec2 index;
 
-const float BASE 255.f;
-const float OFFSET (BASE * BASE / 2.f);
+const int BASE 255;
+const int OFFSET (BASE * BASE / 2);
 
 
-float encode(float value) {
+int encode(int value, int scale) {
     value = value * scale + OFFSET;
-    float x = mod(value, BASE);
-    float y = floor(value, BASE);
+    int x = mod(value, BASE);
+    int y = floor(value, BASE);
     return vec2(x,y) /BASE;
 }
 
 
-float decode(vec2 channels){
+int decode(vec2 channels){
     return (dot(channels, vec2(BASE, BASE*BASE)) - OFFSET) / scale;
 }
 
