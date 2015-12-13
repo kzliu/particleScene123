@@ -3,6 +3,7 @@
 
 #include "GL/glew.h"
 #include <QImage>
+#include <memory>
 
 #include "glm/glm.hpp"            // glm::vec*, mat*, and basic glm functions
 #include "glm/gtx/transform.hpp"  // glm::translate, scale, rotate
@@ -15,7 +16,7 @@ class FramebufferObject;
 class ParticleSystem
 {
 public:
-    ParticleSystem(int texture_width, int texture_height, int canvas_width, int canvas_height, GLuint scale_p, GLuint scale_v, GLuint particle_size, QRgb particle_color);
+    ParticleSystem(int texture_width, int texture_height, GLuint canvas_width, GLuint canvas_height, GLuint scale_p, GLuint scale_v, GLuint particle_size, QRgb particle_color);
 
     /** Encodes a value given the scale */
     glm::vec2 encode(GLuint value, GLuint scale);
@@ -30,7 +31,7 @@ public:
     void swapTextures();
 
     /** Moves the particle system forward by one iteration */
-    void update(FramebufferObject fbo, const GLuint &updateShaderProgram, OpenGLShape quad);
+    void update(GLuint &updateShaderProgram, std::unique_ptr<OpenGLShape>& quad);
 
     /** Draws the current state */
     void draw(const GLuint &drawShaderProgram, OpenGLShape points);
@@ -44,6 +45,10 @@ public:
     GLuint get_p0texture();
 
     GLuint get_v0texture();
+
+    GLuint get_p1texture();
+
+    GLuint get_v1texture();
 
 private:
     GLuint m_p0_textureID;
@@ -63,6 +68,12 @@ private:
 
     GLuint m_particle_size;
     QRgb m_particle_color;
+
+    std::unique_ptr<FramebufferObject> m_FBO1;
+    std::unique_ptr<FramebufferObject> m_FBO2;
+
+    std::unique_ptr<OpenGLShape> m_square;
+
 };
 
 #endif // PARTICLESYSTEM_H
