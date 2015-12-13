@@ -2,11 +2,11 @@
 
 uniform sampler2D position;
 uniform sampler2D velocity;
-//uniform float random;
-//uniform int derivative;
+uniform float random;
+uniform int derivative;
 uniform int pscale;
-//uniform int vscale;
-//uniform vec2 worlddimensions;
+uniform int vscale;
+uniform vec2 worlddimensions;
 in vec2 uv;
 
 out vec4 gl_FragColor;
@@ -22,18 +22,18 @@ void encode(in int value, in int scale, out vec2 xy) {
 }
 
 
-void decode(in int dot_product, in int scale, out int val){
+void decode(in float dot_product, in int scale, out float val){
     val = (dot_product - OFFSET) / scale;
 }
 
-//vec2 updatePosition(inout vec2 p, inout vec2 v){
-//    p += v;
-//    if (p.y <= 0.0 || p.x < 0.0 || p.x > worlddimensions.x) {
-//        /* Left the world, reset particle. */
-//        p.y += worlddimensions.y + random + (index.y - 0.5) * sign(random);
-//        p.x = mod(p.x + random * 10.0, worlddimensions.x);
-//    }
-//}
+void updatePosition(inout vec2 p, inout vec2 v){
+    p += v;
+    if (p.y <= 0.0 || p.x < 0.0 || p.x > worlddimensions.x) {
+        /* Left the world, reset particle. */
+        p.y += worlddimensions.y + random + (uv.y - 0.5) * sign(random);
+        p.x = mod(p.x + random * 10.0, worlddimensions.x);
+    }
+}
 
 //void updateVelocity(inout vec2 p, inout vec2 v) {
 //    v += gravity;
@@ -49,19 +49,39 @@ void main()
     vec4 psample = texture(position, uv);
     vec4 vsample = texture(velocity, uv);
 //    (dot(channels, to_dot) <- dot product where channels = psample and csample .ba and .rg
-//    vec2 p = vec2(decode(psample.rg, pscale), decode(psample.ba, pscale, vec2(BASE, BASE*BASE)));
-//    vec2 v = vec2(decode(vsample.rg, vscale), decode(vsample.ba, vscale, vec2(BASE, BASE*BASE)));
-//    vec2 result;
-//    float s;
-//    if (derivative == 0) {
-//        updatePosition(p, v);
-//        result = p;
-//        s = pscale;
+    float dot_product1p = dot(psample.xy, vec2(BASE, BASE*BASE));
+    float dot_product2p = dot(psample.zw, vec2(BASE, BASE*BASE));
+    float px;
+    float py;
+    decode(dot_product1p, pscale, px);
+    decode(dot_product2p, pscale, py);
+    vec2 p = vec2(px,py);
+
+    float dot_product1v = dot(vsample.xy, vec2(BASE, BASE*BASE));
+    float dot_product2v = dot(vsample.zw, vec2(BASE, BASE*BASE));
+    float vx;
+    float vy;
+    decode(dot_product1v, vscale, vx);
+    decode(dot_product2v, vscale, vy);
+    vec2 v = vec2(vx,vy);
+
+    vec2 result;
+    int s;
+    if (derivative == 0) {
+        updatePosition(p, v);
+        result = p;
+        s = pscale;
 //    } else {
 //        updateVelocity(p, v);
 //        result = v;
 //        s = vscale;
-//    }
+    }
+
+    vec2 frag1;
+
+//    encode(floor(result.x), s, frag1);
+
+
 //    gl_FragColor = vec4(encode(result.x, s), encode(result.y, s));
     gl_FragColor = vsample;
 
