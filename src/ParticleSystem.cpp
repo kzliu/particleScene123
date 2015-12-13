@@ -69,6 +69,10 @@ void ParticleSystem::setTextureImage(const GLuint &textureID, QImage image)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+
+//TODO: initialize indices buffer
+
+
 void ParticleSystem::initializePositionAndVelocity()
 {
     QImage *position_texture = new QImage(m_particle_texture_width, m_particle_texture_height, QImage::Format_ARGB32);
@@ -122,6 +126,8 @@ void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderPro
     // Now we send it specific values
     glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), (GLfloat)rand() * 2.f - 1.f);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 0);
+    glUniform1f(glGetUniformLocation(updateShaderProgram), "pscale", m_scale_p);
+    glUniform1f(glGetUniformLocation(updateShaderProgram), "vscale", m_scale_v);
 
     // Now, we draw
     quad.draw();
