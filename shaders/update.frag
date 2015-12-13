@@ -1,9 +1,7 @@
 #version 400
-//uniform sampler2D position;
-//varying vec4 qt_TexCoord0;
 
-//uniform sampler2D position
-//uniform sampler2D velocity;
+uniform sampler2D position;
+uniform sampler2D velocity;
 //uniform float random;
 //uniform int derivative;
 //uniform int pscale;
@@ -11,11 +9,10 @@
 //uniform vec2 worlddimensions;
 in vec2 uv;
 
-uniform sampler2D texture1;
-out vec4 color;
+out vec4 gl_FragColor;
 
-//const int BASE 255;
-//const int OFFSET (BASE * BASE / 2);
+const int BASE = 255;
+const int OFFSET = (BASE * BASE / 2);
 
 
 //int encode(int value, int scale) {
@@ -50,8 +47,8 @@ out vec4 color;
 
 void main()
 {
-//    vec4 psample = texture2D(position, index);
-//    vec4 vsample = texture2D(velocity, index);
+    vec4 psample = texture(position, uv);
+    vec4 vsample = texture(velocity, uv);
 //    vec2 p = vec2(decode(psample.rg, scale.x), decode(psample.ba, scale.x));
 //    vec2 v = vec2(decode(vsample.rg, scale.y), decode(vsample.ba, scale.y));
 //    vec2 result;
@@ -66,7 +63,6 @@ void main()
 //        s = vscale;
 //    }
 //    gl_FragColor = vec4(encode(result.x, s), encode(result.y, s));
-    color = vec4(255, 255, 255, 255);
+    gl_FragColor = vsample;
 
-    //gl_FragColor = texture2D(qt_Texture0, qt_TexCoord0.st);
 }
