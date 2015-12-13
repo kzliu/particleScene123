@@ -121,31 +121,10 @@ void GLWidget::paintGL()
 
         glUseProgram(m_updateProgramID);
 
+        particles->updatePosition(m_updateProgramID);
 
-        glUniform1i(glGetUniformLocation(m_updateProgramID, "position"), 0);
-        glUniform1i(glGetUniformLocation(m_updateProgramID, "velocity"), 1);
+        particles->updateVelocity(m_updateProgramID);
 
-        particles->bindActiveTexture(particles->get_p0texture(), 0);
-        particles->bindActiveTexture(particles->get_v0texture(), 1);
-
-        glUniform1f(glGetUniformLocation(m_updateProgramID, "pscale"), scale[0]);
-        glUniform1f(glGetUniformLocation(m_updateProgramID, "vscale"), scale[1]);
-
-        glUniform2i(glGetUniformLocation(m_updateProgramID, "worlddimensions"), this->width(), this->height());
-        glUniform1f(glGetUniformLocation(m_updateProgramID, "random"), rand() % 2 - 1.f);
-        glUniform1i(glGetUniformLocation(m_updateProgramID, "derivative"), 0);
-
-        glUniform1f(glGetUniformLocation(m_updateProgramID, "random"), rand() % 2 - 1.f);
-        glUniform1i(glGetUniformLocation(m_updateProgramID, "derivative"), 1);
-
-//        glUniform2fv(glGetUniformLocation(m_textureProgramID, "scale"), 2, scale);
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D, particles->get_p0texture());
-
-//        glActiveTexture(GL_TEXTURE1);
-//        glBindTexture(GL_TEXTURE_2D, particles->get_v0texture());
-
-//        glBindTexture(GL_TEXTURE_2D, m_textureID);
         m_square->draw();
 
 //        glBindTexture(GL_TEXTURE_2D,0);
