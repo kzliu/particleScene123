@@ -146,13 +146,14 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
     glDisable(GL_BLEND);
 
     m_FBO2->attach(m_p1_textureID);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shaderProgramID);
 
     bindActiveTexture(m_p0_textureID, 0);
     bindActiveTexture(m_v0_textureID, 1);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0,0,m_particle_texture_width,m_particle_texture_height);
 
     glUniform1i(glGetUniformLocation(shaderProgramID, "position"), 0);
     glUniform1i(glGetUniformLocation(shaderProgramID, "velocity"), 1);
@@ -166,18 +167,17 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
 
     m_square->draw();
 
-    glBindTexture(GL_TEXTURE_2D,get_p1texture());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    glBindTexture(GL_TEXTURE_2D, get_p1texture());
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+//    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     m_FBO2->attach(m_v1_textureID);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //    glUseProgram(0);
 
-//    glViewport(0,0,m_canvas_width,m_canvas_height);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+//    glViewport(0,0,m_canvas_width,m_canvas_height);    
 
 //    glUseProgram(updateShaderProgram);
 
@@ -187,13 +187,15 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
     glUniform1f(glGetUniformLocation(shaderProgramID, "random"), rand() % 2 - 1.f);
     glUniform1i(glGetUniformLocation(shaderProgramID, "derivative"), 1);
 
+    // Draw into the frame buffer
     m_square->draw();
 
+    // Swapping the updated textures
     swapTextures();
 
     glBindTexture(GL_TEXTURE_2D,0);
-
     glUseProgram(0);
+    m_FBO2->unbind();
 }
 
 void ParticleSystem::updateVelocity(GLuint &shaderProgramID)
