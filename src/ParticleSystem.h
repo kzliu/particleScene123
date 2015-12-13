@@ -30,13 +30,13 @@ public:
     void swapTextures();
 
     /** Moves the particle system forward by one iteration */
-    void update(FramebufferObject fbo, GLuint updateShaderProgram, OpenGLShape quad);
+    void update(FramebufferObject fbo, const GLuint &updateShaderProgram, OpenGLShape quad);
 
     /** Draws the current state */
-    void draw(GLuint drawShaderProgram, OpenGLShape points);
+    void draw(const GLuint &drawShaderProgram, OpenGLShape points);
 
     /** Setting and binding the active texture */
-    void bindActiveTexture(GLuint textureID, GLenum textureUnit);
+    void bindActiveTexture(const GLuint &textureID, GLenum textureUnit);
 
     /** Initialize the position and velocity */
     void initializePositionAndVelocity();
