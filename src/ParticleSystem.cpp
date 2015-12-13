@@ -21,6 +21,8 @@ ParticleSystem::ParticleSystem(int texture_width, int texture_height, int canvas
     createTexture(m_p1_textureID);
     createTexture(m_v0_textureID);
     createTexture(m_v1_textureID);
+
+    initializePositionAndVelocity();
 }
 
 glm::vec2 ParticleSystem::encode(GLuint value, GLuint scale)
@@ -124,7 +126,7 @@ void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderPro
     glUniform1i(glGetUniformLocation(updateShaderProgram, "velocity"), 1);
 
     // Now we send it specific values
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), (GLfloat)rand() * 2.f - 1.f);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2.f - 1.f);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 0);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "pscale"), m_scale_p);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "vscale"), m_scale_v);
@@ -136,7 +138,7 @@ void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderPro
     fbo.attach(m_v1_textureID);
 
     // We send the shader specific values this time to calculate velocity
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), (GLfloat)rand() * 2.f - 1.f);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2.f - 1.f);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 1);
 
     // We draw again

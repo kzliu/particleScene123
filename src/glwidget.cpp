@@ -86,7 +86,6 @@ void GLWidget::paintGL()
 
         //       [Task 3] Create and attach a color texture (using m_colorTextureID).
         m_FBO1->attach(m_colorTextureID);
-        m_FBO1->bind();
 //        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 //        glUseProgram(0);
 
