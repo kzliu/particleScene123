@@ -77,31 +77,36 @@ void ParticleSystem::setTextureImage(const GLuint &textureID, QImage image)
 
 void ParticleSystem::initializePositionAndVelocity()
 {
-    QImage *position_texture = new QImage(m_particle_texture_width, m_particle_texture_height, QImage::Format_ARGB32);
-    QImage *velocity_texture = new QImage(m_particle_texture_width, m_particle_texture_height, QImage::Format_ARGB32);
+    QImage position_texture(m_particle_texture_width, m_particle_texture_height, QImage::Format_ARGB32);
+    position_texture.fill(Qt::white);
+
+    QImage velocity_texture(m_particle_texture_width, m_particle_texture_height, QImage::Format_ARGB32);
+    velocity_texture.fill(Qt::white);
+
 
     for (unsigned int y = 0; y < m_particle_texture_height; y++) {
         for (unsigned int x = 0; x < m_particle_texture_width; x++){
-            int index = y * m_particle_texture_width + x;
+//            int index = y * m_particle_texture_width + x;
             // TODO: check this out in debugging
             glm::vec2 p_x = encode(rand() % m_canvas_width, m_scale_p);
             glm::vec2 p_y = encode(0.5 * m_canvas_height, m_scale_p);
             glm::vec2 v_x = encode(rand() % 2 - 1, m_scale_v);
-            glm::vec2 v_y = encode(-1 * (rand() % 2), m_scale_v);
+            glm::vec2 v_y = encode(-1 * (rand() % 2), m_scale_v); //why is this negative?
+
+//            std::cout << p_x.x << std::endl;
 
             QRgb p_c = qRgba(p_x[0], p_x[1], p_y[0], p_y[1]);
             QRgb v_c = qRgba(v_x[0], v_x[1], v_y[0], v_y[1]);
 
-            position_texture->setColor(index, p_c);
-            velocity_texture->setColor(index, v_c);
+            position_texture.setPixel(x,y, p_c);
+
+            velocity_texture.setPixel(x,y, v_c);
         }
     }
 
-    setTextureImage(m_p0_textureID, *position_texture);
-    setTextureImage(m_v0_textureID, *velocity_texture);
+    setTextureImage(m_p0_textureID, position_texture);
+    setTextureImage(m_v0_textureID, velocity_texture);
 
-    delete position_texture;
-    delete velocity_texture;
 }
 
 void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderProgram, OpenGLShape quad)
