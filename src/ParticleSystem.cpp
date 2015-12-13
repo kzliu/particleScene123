@@ -138,11 +138,10 @@ void ParticleSystem::initializePositionAndVelocity()
 
 }
 
-void ParticleSystem::update(GLuint &updateShaderProgram, std::unique_ptr<OpenGLShape>& quad)
+void ParticleSystem::updatePosition(GLuint &shaderProgramID)
 {
     // This disables Gl blending the computed fragment colors with the values in the color buffers
     glDisable(GL_BLEND);
-
 
     m_FBO2->attach(m_p1_textureID);
 //        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -150,7 +149,7 @@ void ParticleSystem::update(GLuint &updateShaderProgram, std::unique_ptr<OpenGLS
 
 
 
-    glUseProgram(updateShaderProgram);
+    glUseProgram(shaderProgramID);
 
     bindActiveTexture(m_p0_textureID, 0);
     bindActiveTexture(m_v0_textureID, 1);
@@ -158,15 +157,15 @@ void ParticleSystem::update(GLuint &updateShaderProgram, std::unique_ptr<OpenGLS
 //    glViewport(0,0,m_particle_texture_width,m_particle_texture_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "position"), 0);
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "velocity"), 1);
+    glUniform1i(glGetUniformLocation(shaderProgramID, "position"), 0);
+    glUniform1i(glGetUniformLocation(shaderProgramID, "velocity"), 1);
 
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "pscale"), m_scale_p);
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "vscale"), m_scale_v);
+    glUniform1f(glGetUniformLocation(shaderProgramID, "pscale"), m_scale_p);
+    glUniform1f(glGetUniformLocation(shaderProgramID, "vscale"), m_scale_v);
 
-    glUniform2i(glGetUniformLocation(updateShaderProgram, "worlddimensions"), m_canvas_width, m_canvas_height);
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2 - 1.f);
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 0);
+    glUniform2i(glGetUniformLocation(shaderProgramID, "worlddimensions"), m_canvas_width, m_canvas_height);
+    glUniform1f(glGetUniformLocation(shaderProgramID, "random"), rand() % 2 - 1.f);
+    glUniform1i(glGetUniformLocation(shaderProgramID, "derivative"), 0);
 
     m_square->draw();
 
@@ -188,16 +187,23 @@ void ParticleSystem::update(GLuint &updateShaderProgram, std::unique_ptr<OpenGLS
     bindActiveTexture(m_p0_textureID, 0);
     bindActiveTexture(m_v0_textureID, 1);
 
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2 - 1.f);
-    glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 1);
+    glUniform1f(glGetUniformLocation(shaderProgramID, "random"), rand() % 2 - 1.f);
+    glUniform1i(glGetUniformLocation(shaderProgramID, "derivative"), 1);
 
     m_square->draw();
 
     glBindTexture(GL_TEXTURE_2D,0);
 
-//    swapTextures();
+////    swapTextures();
 
     glUseProgram(0);
+
+}
+
+void ParticleSystem::updateVelocity(GLuint &shaderProgramID)
+{
+    glUniform1f(glGetUniformLocation(shaderProgramID, "random"), rand() % 2 - 1.f);
+    glUniform1i(glGetUniformLocation(shaderProgramID, "derivative"), 1);
 }
 
 void ParticleSystem::draw(const GLuint &drawShaderProgram, OpenGLShape points)

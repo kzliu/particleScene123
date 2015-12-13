@@ -30,8 +30,11 @@ public:
     /** This swaps the 'front' and 'back' textures */
     void swapTextures();
 
-    /** Moves the particle system forward by one iteration */
-    void update(GLuint &updateShaderProgram, std::unique_ptr<OpenGLShape>& quad);
+    /** Updates the particle system position */
+    void updatePosition(GLuint &shaderProgramID);
+
+    /** Updates the particle system velocity */
+    void updateVelocity(GLuint &shaderProgramID);
 
     /** Draws the current state */
     void draw(const GLuint &drawShaderProgram, OpenGLShape points);

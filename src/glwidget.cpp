@@ -113,12 +113,13 @@ void GLWidget::paintGL()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
-        particles->update(m_updateProgramID, m_square);
+//        particles->update(m_updateProgramID, m_square);
 
 //        m_FBO2->attach(particles->get_p1texture());
 
 //        glUseProgram(0);
 
+        particles->updatePosition(m_updateProgramID);
 
 //        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

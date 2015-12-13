@@ -21,8 +21,6 @@ void encode(in float value, in float scale, out vec2 xy) {
     xy.y = floor(value / BASE) / BASE;
 }
 
-
-
 void decode(in float dot_product, in float scale, out float val){
     val = (dot_product - OFFSET) / scale;
 }
@@ -89,7 +87,4 @@ void main()
 
 
     gl_FragColor = vec4(frag1.x, frag1.y, frag2.x, frag2.y);
-//    gl_FragColor = vsample;
-
-
 }
