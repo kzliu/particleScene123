@@ -119,14 +119,12 @@ void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderPro
     // We use the update shader program
     glUseProgram(updateShaderProgram);
 
-    // TODO: We're meant to do something with the quad here
-
     // Here we pass the shader our position and velocity textures
     glUniform1i(glGetUniformLocation(updateShaderProgram, "position"), 0);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "velocity"), 1);
 
     // Now we send it specific values
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2.f - 1.f);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2 - 1.f);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 0);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "pscale"), m_scale_p);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "vscale"), m_scale_v);
@@ -138,7 +136,7 @@ void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderPro
     fbo.attach(m_v1_textureID);
 
     // We send the shader specific values this time to calculate velocity
-    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2.f - 1.f);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), rand() % 2 - 1.f);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 1);
 
     // We draw again
