@@ -258,6 +258,7 @@ GLuint ParticleSystem::get_v0texture(){
     return m_v0_textureID;
 }
 
+
 GLuint ParticleSystem::get_p1texture(){
     return m_p1_textureID;
 }
@@ -265,3 +266,4 @@ GLuint ParticleSystem::get_p1texture(){
 GLuint ParticleSystem::get_v1texture(){
     return m_v1_textureID;
 }
+

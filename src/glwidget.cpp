@@ -121,6 +121,7 @@ void GLWidget::paintGL()
 
         glUseProgram(m_updateProgramID);
 
+
         glUniform1i(glGetUniformLocation(m_updateProgramID, "position"), 0);
         glUniform1i(glGetUniformLocation(m_updateProgramID, "velocity"), 1);
 
@@ -143,6 +144,7 @@ void GLWidget::paintGL()
 
 //        glActiveTexture(GL_TEXTURE1);
 //        glBindTexture(GL_TEXTURE_2D, particles->get_v0texture());
+
 //        glBindTexture(GL_TEXTURE_2D, m_textureID);
         m_square->draw();
 

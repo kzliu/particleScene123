@@ -15,11 +15,12 @@ const int BASE = 255;
 const int OFFSET = (BASE * BASE / 2);
 
 
-void encode(in float value, in float scale, out vec2 xy) {
+void encode(in int value, in int scale, out vec2 xy) {
     value = value * scale + OFFSET;
     xy.x = mod(value, BASE) /BASE ;
     xy.y = floor(value / BASE) / BASE;
 }
+
 
 
 void decode(in float dot_product, in float scale, out float val){
@@ -35,6 +36,7 @@ void updatePosition(inout vec2 p, inout vec2 v){
     }
 }
 
+
 void updateVelocity(inout vec2 p, inout vec2 v) {
 //    v += gravity;
     v -= 0.3;
@@ -44,6 +46,7 @@ void updateVelocity(inout vec2 p, inout vec2 v) {
         v.y = 0.0;
     }
 }
+
 
 void main()
 {
@@ -67,16 +70,17 @@ void main()
     vec2 v = vec2(vx,vy);
 
     vec2 result;
-    float s;
+    int s;
     if (derivative == 0) {
         updatePosition(p, v);
         result = p;
         s = pscale;
-    } else {
-        updateVelocity(p, v);
-        result = v;
-        s = vscale;
+//    } else {
+//        updateVelocity(p, v);
+//        result = v;
+//        s = vscale;
     }
+
 
     vec2 frag1, frag2;
 
@@ -86,5 +90,6 @@ void main()
 
     gl_FragColor = vec4(frag1.x, frag1.y, frag2.x, frag2.y);
 //    gl_FragColor = vsample;
+
 
 }
