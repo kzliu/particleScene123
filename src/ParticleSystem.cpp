@@ -174,11 +174,11 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-//    m_FBO2->attach(m_v1_textureID);
+    m_FBO2->attach(m_v1_textureID);
 
 //    glUseProgram(0);
 
-    glViewport(0,0,m_canvas_width,m_canvas_height);
+//    glViewport(0,0,m_canvas_width,m_canvas_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -192,9 +192,9 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
 
     m_square->draw();
 
-    glBindTexture(GL_TEXTURE_2D,0);
+    swapTextures();
 
-////    swapTextures();
+    glBindTexture(GL_TEXTURE_2D,0);
 
     glUseProgram(0);
 
