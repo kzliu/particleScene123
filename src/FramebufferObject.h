@@ -17,10 +17,13 @@ public:
     /** Attaching the active color texture*/
     void attach(GLuint textureID);
 
+
 private:
     GLuint m_ID;
 
     int m_width, m_height;
+
+    GLuint m_depthBufferID;
 };
 
 #endif // FRAMEBUFFEROBJECT_H

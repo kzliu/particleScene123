@@ -60,7 +60,7 @@ void ParticleSystem::swapTextures()
 void ParticleSystem::setTextureImage(const GLuint &textureID, QImage image)
 {
     glBindTexture(GL_TEXTURE_2D, textureID);
-    if(image == NULL)
+    if(image.isNull())
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     } else {
@@ -179,7 +179,7 @@ void ParticleSystem::draw(GLuint drawShaderProgram, OpenGLShape points)
 
 void ParticleSystem::bindActiveTexture(GLuint textureID, GLenum textureUnit)
 {
-    if(unit > 0)
+    if(textureUnit > 0)
     {
         glActiveTexture(GL_TEXTURE0 + textureUnit);
     }
