@@ -46,16 +46,16 @@ void GLWidget::initializeGL()
     // TODO (Task 7): Interleave UV-coordinates along with positions and colors in your VBO
     GLfloat data[32] = {-0.5f, 0.5f, 0.f,
                         1.f, 0.f, 0.f,
-                        0.f, 0.f,
+                        0.f, 1.f,
                         -0.5f, -0.5f, 0.f,
                         0.f, 1.f, 0.f,
-                        0.f, 1.f,
+                        0.f, 0.f,
                         0.5f, 0.5f, 0.f,
                         1.f, 1.f, 0.f,
-                        1.f, 0.f,
+                        1.f, 1.f,
                         0.5f, -0.5f, 0.f,
                         0.f, 0.f, 1.f,
-                        1.f, 1.f };
+                        1.f, 0.f };
     m_square->setVertexData(data, 32*sizeof(GLfloat), GL_TRIANGLE_STRIP, 4);
     m_square->setAttribute(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
     m_square->setAttribute(1, 3, GL_FLOAT, GL_FALSE, 32, 12);

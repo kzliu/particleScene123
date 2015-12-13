@@ -10,18 +10,18 @@
 
 class OpenGLShape;
 class FramebufferObject;
-class Qrgb;
+//class QRgb;
 
 class ParticleSystem
 {
 public:
-    ParticleSystem(int texture_width, int texture_height, int canvas_width, int canvas_height, GLfloat scale_p, GLfloat scale_v, GLfloat particle_size, Qrgb particle_color);
+    ParticleSystem(int texture_width, int texture_height, int canvas_width, int canvas_height, GLfloat scale_p, GLfloat scale_v, GLfloat particle_size, QRgb particle_color);
 
     /** Encodes a value given the scale */
-    glm::vec2<GLfloat> encode(GLfloat value, GLfloat scale);
+    glm::vec2 encode(GLfloat value, GLfloat scale);
 
     /** This creates a texture */
-    void createTexture(const GLuint &textureID);
+    void createTexture(GLuint &textureID);
 
     /** This sets the content of a texture */
     void setTextureImage(const GLuint &textureID, QImage image);
@@ -58,7 +58,7 @@ private:
     GLfloat m_scale_v;
 
     GLfloat m_particle_size;
-    Qrgb m_particle_color;
+    QRgb m_particle_color;
 };
 
 #endif // PARTICLESYSTEM_H

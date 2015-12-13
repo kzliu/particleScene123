@@ -2,7 +2,7 @@
 #include "openglshape.h"
 #include "FramebufferObject.h"
 
-ParticleSystem::ParticleSystem(int texture_width, int texture_height, int canvas_width, int canvas_height, GLfloat scale_p, GLfloat scale_v, int particle_size, Qrgb particle_color)
+ParticleSystem::ParticleSystem(int texture_width, int texture_height, int canvas_width, int canvas_height, GLfloat scale_p, GLfloat scale_v, GLfloat particle_size, QRgb particle_color)
     : m_p0_textureID(0),
       m_p1_textureID(0),
       m_v0_textureID(0),
@@ -23,17 +23,17 @@ ParticleSystem::ParticleSystem(int texture_width, int texture_height, int canvas
     createTexture(m_v1_textureID);
 }
 
-glm::vec2<GLfloat> ParticleSystem::encode(GLfloat value, GLfloat scale)
+glm::vec2 ParticleSystem::encode(GLfloat value, GLfloat scale)
 {
     GLfloat base = 255.f;
     value = value * scale + base * base / 2.f;
 
-    glm::vec2 pair = glm::vec2(glm::floor((value % base) / base * 255.f), glm::floor(glm::floor(value / base) / base * 255.f));
+    glm::vec2 pair = glm::vec2(glm::floor(glm::mod(value,base) / base * 255.f), glm::floor(glm::floor(value / base) / base * 255.f));
 
     return pair;
 }
 
-void ParticleSystem::createTexture(const GLuint &textureID)
+void ParticleSystem::createTexture(GLuint &textureID)
 {
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
@@ -78,8 +78,8 @@ void ParticleSystem::initializePositionAndVelocity()
     QImage *position_texture = new QImage(m_particle_texture_width, m_particle_texture_height, QImage::Format_ARGB32);
     QImage *velocity_texture = new QImage(m_particle_texture_width, m_particle_texture_height, QImage::Format_ARGB32);
 
-    for (int y = 0; y < m_particle_texture_height; y++) {
-        for (int x = 0; x < m_particle_texture_width; x++){
+    for (unsigned int y = 0; y < m_particle_texture_height; y++) {
+        for (unsigned int x = 0; x < m_particle_texture_width; x++){
             int index = y * m_particle_texture_width + x;
             // TODO: check this out in debugging
             glm::vec2 p_x = encode((GLfloat)rand() * m_canvas_width, m_scale_p);
@@ -87,8 +87,8 @@ void ParticleSystem::initializePositionAndVelocity()
             glm::vec2 v_x = encode((GLfloat)rand() * 1.f - 0.5f, m_scale_v);
             glm::vec2 v_y = encode((GLfloat)rand() * 2.5f, m_scale_v);
 
-            QRgb p_c = QRgba(p_x[0], p_x[1], p_y[0], p_y[1]);
-            QRgb v_c = QRgba(v_x[0], v_x[1], v_y[0], v_y[1]);
+            QRgb p_c = qRgba(p_x[0], p_x[1], p_y[0], p_y[1]);
+            QRgb v_c = qRgba(v_x[0], v_x[1], v_y[0], v_y[1]);
 
             position_texture->setColor(index, p_c);
             velocity_texture->setColor(index, v_c);
@@ -126,8 +126,8 @@ void ParticleSystem::update(FramebufferObject fbo, const GLuint &updateShaderPro
     // Now we send it specific values
     glUniform1f(glGetUniformLocation(updateShaderProgram, "random"), (GLfloat)rand() * 2.f - 1.f);
     glUniform1i(glGetUniformLocation(updateShaderProgram, "derivative"), 0);
-    glUniform1f(glGetUniformLocation(updateShaderProgram), "pscale", m_scale_p);
-    glUniform1f(glGetUniformLocation(updateShaderProgram), "vscale", m_scale_v);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "pscale"), m_scale_p);
+    glUniform1f(glGetUniformLocation(updateShaderProgram, "vscale"), m_scale_v);
 
     // Now, we draw
     quad.draw();
@@ -172,10 +172,10 @@ void ParticleSystem::draw(const GLuint &drawShaderProgram, OpenGLShape points)
     // Now we send it specific values
     glUniform2i(glGetUniformLocation(drawShaderProgram, "statedimensions"), m_particle_texture_width, m_particle_texture_height);
     glUniform2i(glGetUniformLocation(drawShaderProgram, "worlddimensions"), m_canvas_width, m_canvas_height);
-    glUniform1f(glGetUniformLocation(drawShaderProgram), "pscale", m_scale_p);
-    glUniform1f(glGetUniformLocation(drawShaderProgram), "vscale", m_scale_v);
-    glUniform1f(glGetUniformLocation(drawShaderProgram), "particlesize", m_particle_size);
-    glUniformfi(glGetUniformLocation(drawShaderProgram), "particlecolor", qRed(m_particle_color), qGreen(m_particle_color), qBlue(m_particle_color), qAlpha(m_particle_color));
+    glUniform1f(glGetUniformLocation(drawShaderProgram, "pscale"), m_scale_p);
+    glUniform1f(glGetUniformLocation(drawShaderProgram, "vscale"), m_scale_v);
+    glUniform1f(glGetUniformLocation(drawShaderProgram, "particlesize"), m_particle_size);
+//    glUniformfi(glGetUniformLocation(drawShaderProgram, "particlecolor"), qRed(m_particle_color), qGreen(m_particle_color), qBlue(m_particle_color), qAlpha(m_particle_color));
 
     // TODO:And now we draw (using GL_POINTS)
     points.draw();
