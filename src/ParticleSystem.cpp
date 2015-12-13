@@ -21,15 +21,17 @@ ParticleSystem::ParticleSystem(int texture_width, int texture_height, GLuint can
       m_FBO1(nullptr),
       m_FBO2(nullptr)
 {
-    // Initializing the position and velocity textures
+    // We create the velocity textures
     createTexture(m_p0_textureID);
     createTexture(m_p1_textureID);
     createTexture(m_v0_textureID);
     createTexture(m_v1_textureID);
 
+    // Now we initialize the textures with specific values
     initializePositionAndVelocity();
-    m_FBO1.reset(new FramebufferObject(texture_width,texture_height));
-    m_FBO2.reset(new FramebufferObject(texture_width,texture_height));
+
+    m_FBO1.reset(new FramebufferObject(m_particle_texture_width,m_particle_texture_height));
+    m_FBO2.reset(new FramebufferObject(m_particle_texture_width,m_particle_texture_height));
 
     m_square.reset(new OpenGLShape());
 
@@ -204,11 +206,16 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
 
 //    glUseProgram(0);
 
-    glUniform1i(glGetUniformLocation(shaderProgramID, "position"), 0);
-    glUniform1i(glGetUniformLocation(shaderProgramID, "velocity"), 1);
+    m_FBO1->attach(m_p1_textureID);
+
+    glViewport(0,0,m_particle_texture_width,m_particle_texture_height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     bindActiveTexture(m_p0_textureID, 0);
     bindActiveTexture(m_v0_textureID, 1);
+
+    glUniform1i(glGetUniformLocation(shaderProgramID, "position"), 0);
+    glUniform1i(glGetUniformLocation(shaderProgramID, "velocity"), 1);
 
     glUniform1f(glGetUniformLocation(shaderProgramID, "pscale"), m_scale_p);
     glUniform1f(glGetUniformLocation(shaderProgramID, "vscale"), m_scale_v);
