@@ -171,8 +171,8 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
-//    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    m_FBO2->attach(m_v1_textureID);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+//    m_FBO2->attach(m_v1_textureID);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //    glUseProgram(0);
@@ -180,9 +180,6 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
 //    glViewport(0,0,m_canvas_width,m_canvas_height);    
 
 //    glUseProgram(updateShaderProgram);
-
-    bindActiveTexture(m_p0_textureID, 0);
-    bindActiveTexture(m_v0_textureID, 1);
 
     glUniform1f(glGetUniformLocation(shaderProgramID, "random"), rand() % 2 - 1.f);
     glUniform1i(glGetUniformLocation(shaderProgramID, "derivative"), 1);
