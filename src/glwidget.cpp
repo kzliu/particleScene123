@@ -91,7 +91,7 @@ void GLWidget::paintGL()
 //    float time = m_increment++ / (float) m_fps;      // Time in seconds
     float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
     glm::vec2 scale = glm::vec2(s, s*100);
-    m_particles.reset(new ParticleSystem(20, 20, this->width(), this->height(), scale[0], scale[1], 15.f, qRgba(100,10,10,255)));
+    m_particles.reset(new ParticleSystem(40, 40, this->width(), this->height(), scale[0], scale[1], 15.f, qRgba(100,100,100,150)));
 
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
@@ -151,5 +151,5 @@ void GLWidget::resizeGL(int w, int h)
 /** Repaints the canvas. Called 60 times per second. */
 void GLWidget::tick()
 {
-    paintGL();
+    update();
 }
