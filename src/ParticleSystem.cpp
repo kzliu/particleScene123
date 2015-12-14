@@ -33,12 +33,11 @@ ParticleSystem::ParticleSystem(int texture_width, int texture_height, GLuint can
     m_FBO1.reset(new FramebufferObject(m_particle_texture_width,m_particle_texture_height));
     m_FBO2.reset(new FramebufferObject(m_particle_texture_width,m_particle_texture_height));
 
+    // Now we populate the quads we use in drawing and updating
     m_square.reset(new OpenGLShape());
+    m_indices.reset(new OpenGLShape());
 
-    // TODO (Task 1): Initialize m_square.
-    // TODO (Task 3): Interleave positions and colors in the array used to intialize m_square
-    // TODO (Task 7): Interleave UV-coordinates along with positions and colors in your VBO
-    GLfloat data[32] = {-0.5f, 0.5f, 0.f,
+    GLfloat square_data[32] = {-0.5f, 0.5f, 0.f,
                         1.f, 0.f, 0.f,
                         0.f, 1.f,
                         -0.5f, -0.5f, 0.f,
@@ -50,10 +49,23 @@ ParticleSystem::ParticleSystem(int texture_width, int texture_height, GLuint can
                         0.5f, -0.5f, 0.f,
                         0.f, 0.f, 1.f,
                         1.f, 0.f };
-    m_square->setVertexData(data, 32*sizeof(GLfloat), GL_TRIANGLE_STRIP, 4);
+    m_square->setVertexData(square_data, 32*sizeof(GLfloat), GL_TRIANGLE_STRIP, 4);
     m_square->setAttribute(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
     m_square->setAttribute(1, 3, GL_FLOAT, GL_FALSE, 32, 12);
     m_square->setAttribute(2, 2, GL_FLOAT, GL_FALSE, 32, 24);
+
+    int indices_size = m_particle_texture_width * m_particle_texture_height * 2;
+    GLfloat indices_data[indices_size] = {0};
+    for(int y = 0; y < m_particle_texture_height; y++){
+        for(int x = 0; x < m_particle_texture_width; x++){
+            int i = y * m_particle_texture_width * 2 + x * 2;
+            indices_data[i] = x;
+            indices_data[i + 1] = y;
+        }
+    }
+
+    m_indices->setVertexData(indices_data, indices_size*sizeof(GLfloat), GL_POINTS, indices_size / 2);
+    m_indices->setAttribute(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 glm::vec2 ParticleSystem::encode(GLuint value, GLuint scale)
@@ -117,14 +129,10 @@ void ParticleSystem::initializePositionAndVelocity()
 
     for (unsigned int y = 0; y < m_particle_texture_height; y++) {
         for (unsigned int x = 0; x < m_particle_texture_width; x++){
-//            int index = y * m_particle_texture_width + x;
-            // TODO: check this out in debugging
             glm::vec2 p_x = encode(rand() % m_canvas_width, m_scale_p);
             glm::vec2 p_y = encode(0.5 * m_canvas_height, m_scale_p);
             glm::vec2 v_x = encode(rand() % 2 - 1, m_scale_v);
             glm::vec2 v_y = encode(-1 * (rand() % 2), m_scale_v); //why is this negative?
-
-//            std::cout << p_x.x << std::endl;
 
             QRgb p_c = qRgba(p_x[0], p_x[1], p_y[0], p_y[1]);
             QRgb v_c = qRgba(v_x[0], v_x[1], v_y[0], v_y[1]);
@@ -231,8 +239,9 @@ void ParticleSystem::draw(const GLuint &drawShaderProgram, OpenGLShape points)
 //    glUniform1f(glGetUniformLocation(drawShaderProgram, "particlesize"), m_particle_size);
     glUniform4i(glGetUniformLocation(drawShaderProgram, "particlecolor"), qRed(m_particle_color), qGreen(m_particle_color), qBlue(m_particle_color), qAlpha(m_particle_color));
 
-    // TODO:And now we draw (using GL_POINTS)
-    points.draw();
+    // Now we draw
+    m_indices->draw();
+    glBindTexture(GL_TEXTURE_2D,0);
 
     glUseProgram(0);
 }

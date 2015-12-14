@@ -76,6 +76,7 @@ private:
     std::unique_ptr<FramebufferObject> m_FBO2;
 
     std::unique_ptr<OpenGLShape> m_square;
+    std::unique_ptr<OpenGLShape> m_indices;
 
 };
 
