@@ -73,7 +73,7 @@ glm::vec2 ParticleSystem::encode(GLuint value, GLuint scale)
     GLuint base = 255;
     value = value * scale + base * base / 2;
 
-    glm::vec2 pair = glm::vec2(glm::floor((GLfloat)(value % base) / base * 255), glm::floor((GLfloat)glm::floor((GLfloat)value / base) / base * 255));
+    glm::vec2 pair = glm::vec2(glm::floor((GLfloat)(value % base) / base * 255), glm::floor((GLfloat)glm::floor((GLfloat)(value / base)) / base * 255));
 
     return pair;
 }
@@ -126,7 +126,6 @@ void ParticleSystem::initializePositionAndVelocity()
     QImage velocity_texture(m_particle_texture_width, m_particle_texture_height, QImage::Format_ARGB32);
     velocity_texture.fill(Qt::white);
 
-
     for (unsigned int y = 0; y < m_particle_texture_height; y++) {
         for (unsigned int x = 0; x < m_particle_texture_width; x++){
             glm::vec2 p_x = encode(rand() % (int)floor(m_canvas_width/3) + floor(m_canvas_width/3) , m_scale_p);
@@ -178,7 +177,9 @@ void ParticleSystem::update(GLuint &shaderProgramID)
     m_FBO2->attach(m_v1_textureID);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUniform1f(glGetUniformLocation(shaderProgramID, "random"), rand() % 2 - 1.f);
+    GLfloat m_rand = (GLfloat)rand() / (GLfloat)RAND_MAX;
+
+    glUniform1f(glGetUniformLocation(shaderProgramID, "random"), m_rand * 2.f - 1.f);
     glUniform1i(glGetUniformLocation(shaderProgramID, "derivative"), 1);
 
     // Draw into the frame buffer

@@ -82,10 +82,6 @@ void GLWidget::initializeGL()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
-    glm::vec2 scale = glm::vec2(s, s*100);
-    m_particles.reset(new ParticleSystem(20, 20, this->width(), this->height(), scale[0], scale[1], 15.f, qRgba(100,10,10,255)));
 }
 
 void GLWidget::paintGL()
@@ -93,6 +89,9 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //    float time = m_increment++ / (float) m_fps;      // Time in seconds
+    float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
+    glm::vec2 scale = glm::vec2(s, s*100);
+    m_particles.reset(new ParticleSystem(20, 10, this->width(), this->height(), scale[0], scale[1], 10.f, qRgba(100,10,10,255)));
 
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
