@@ -14,6 +14,8 @@
 
 class OpenGLShape;
 
+class ParticleSystem;
+
 class GLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -56,6 +58,8 @@ private:
 
     /** Incremented on every call to paintGL. */
     int m_increment;
+
+    std::unique_ptr<ParticleSystem> m_particles;
 };
 
 #endif // GLWIDGET_H

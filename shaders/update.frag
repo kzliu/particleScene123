@@ -37,7 +37,7 @@ void updatePosition(inout vec2 p, inout vec2 v){
 
 void updateVelocity(inout vec2 p, inout vec2 v) {
 //    v += gravity;
-    v -= 0.3;
+    v.y -= 0.05;
     if (p.y + v.y < -1.0) {
         /* Left the world, reset particle. */
         v.x = v.x + random / 2.0 + (uv.x - 0.5) * sign(random);

@@ -23,8 +23,9 @@ GLWidget::GLWidget(QGLFormat format, QWidget *parent)
       m_FBO1(nullptr), m_FBO2(nullptr),
       m_textureID(0),
       m_timer(this),
-      m_fps(60.0f),
-      m_increment(0)
+      m_fps(10.f),
+      m_increment(0),
+      m_particles(nullptr)
 {
     // Set up 60 FPS draw loop.
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(tick()));
@@ -40,7 +41,7 @@ GLWidget::~GLWidget()
 
 
 void GLWidget::initializeGL()
-{    
+{
     ResourceLoader::initializeGlew();
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Defines the color the screen will be cleared to.
 
@@ -87,12 +88,10 @@ void GLWidget::paintGL()
 {
 //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    float time = m_increment++ / (float) m_fps;      // Time in seconds.
-
+//    float time = m_increment++ / (float) m_fps;      // Time in seconds
     float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
     glm::vec2 scale = glm::vec2(s, s*100);
-
-    ParticleSystem *particles = new ParticleSystem(200, 200, this->width(), this->height(), scale[0], scale[1], 40.f, qRgba(100,10,10,255));
+    m_particles.reset(new ParticleSystem(20, 20, this->width(), this->height(), scale[0], scale[1], 15.f, qRgba(100,10,10,255)));
 
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
@@ -103,87 +102,21 @@ void GLWidget::paintGL()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-        //       [Task 3] Create and attach a color texture (using m_colorTextureID).
         m_FBO1->attach(m_colorTextureID);
-//        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-//        glUseProgram(0);
-
-//        glViewport(0,0,this->width(),this->height());
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // TODO (Task 1): Draw the square using m_solidProgramID.
 
         glUseProgram(m_gradientProgramID);
 
-        // TODO (Task 2): Set the uniform's value to a color other than white
-//        glUniform3f(glGetUniformLocation(m_gradientProgramID, "color"), 0.9, 0.0, 0.1);
         m_square->draw();
 
         glBindTexture(GL_TEXTURE_2D, m_colorTextureID);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
-//        particles->update(m_updateProgramID, m_square);
 
-//        m_FBO2->attach(particles->get_p1texture());
-
-//        glUseProgram(0);
-
-        particles->update(m_updateProgramID);
-        particles->draw(m_drawProgramID);
-
-//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-//        glUseProgram(m_updateProgramID);
-
-
-//        glUniform1i(glGetUniformLocation(m_updateProgramID, "position"), 0);
-//        glUniform1i(glGetUniformLocation(m_updateProgramID, "velocity"), 1);
-
-//        particles->bindActiveTexture(particles->get_p0texture(), 0);
-//        particles->bindActiveTexture(particles->get_v0texture(), 1);
-
-//        glUniform1f(glGetUniformLocation(m_updateProgramID, "pscale"), scale[0]);
-//        glUniform1f(glGetUniformLocation(m_updateProgramID, "vscale"), scale[1]);
-
-//        glUniform2i(glGetUniformLocation(m_updateProgramID, "worlddimensions"), this->width(), this->height());
-//        glUniform1f(glGetUniformLocation(m_updateProgramID, "random"), rand() % 2 - 1.f);
-//        glUniform1i(glGetUniformLocation(m_updateProgramID, "derivative"), 0);
-
-//        m_square->draw();
-
-//        glBindTexture(GL_TEXTURE_2D,particles->get_p1texture());
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-
-//        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-//        glUseProgram(0);
-
-//        glViewport(0,0,this->width(),this->height());
-//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-//        glUseProgram(m_updateProgramID);
-
-//        glUniform1i(glGetUniformLocation(m_updateProgramID, "position"), 0);
-//        glUniform1i(glGetUniformLocation(m_updateProgramID, "velocity"), 1);
-
-//        particles->bindActiveTexture(particles->get_p0texture(), 0);
-//        particles->bindActiveTexture(particles->get_v0texture(), 1);
-
-//        glUniform1f(glGetUniformLocation(m_updateProgramID, "pscale"), scale[0]);
-//        glUniform1f(glGetUniformLocation(m_updateProgramID, "vscale"), scale[1]);
-
-//        glUniform2i(glGetUniformLocation(m_updateProgramID, "worlddimensions"), this->width(), this->height());
-
-//        glUniform1f(glGetUniformLocation(m_updateProgramID, "random"), rand() % 2 - 1.f);
-//        glUniform1i(glGetUniformLocation(m_updateProgramID, "derivative"), 1);
-
-//        m_square->draw();
-
-//        glBindTexture(GL_TEXTURE_2D,0);
-//        glUseProgram(0);
+        m_particles->update(m_updateProgramID);
+        m_particles->draw(m_drawProgramID);
         break;
 
     case GRADIENT_SHADER_PROGRAM:
@@ -218,5 +151,5 @@ void GLWidget::resizeGL(int w, int h)
 /** Repaints the canvas. Called 60 times per second. */
 void GLWidget::tick()
 {
-    update();
+    paintGL();
 }
