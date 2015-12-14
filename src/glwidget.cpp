@@ -83,10 +83,10 @@ void GLWidget::initializeGL()
     m_square->setAttribute(1, 3, GL_FLOAT, GL_FALSE, 32, 12);
     m_square->setAttribute(2, 2, GL_FLOAT, GL_FALSE, 32, 24);
 
-    qDebug() << loadOBJ("/gpfs/main/home/kzliu/course/cs123/hmm/cauldron_uv.obj", m_vertex_vector);
+    qDebug() << loadOBJ("/gpfs/main/home/kzliu/course/cs123/final/particleScene123/cauldron_uv.obj", m_vertex_vector);
 
     QImage image;
-    bool success = image.load(QString::fromStdString("/gpfs/main/home/kzliu/course/cs123/hmm/images/normal_stone.png"));
+    bool success = image.load(QString::fromStdString("/gpfs/main/home/kzliu/course/cs123/final/particleScene123/images/normal_stone.png"));
     qDebug() << success;
 
     glGenTextures(1,&m_textureID);
@@ -100,7 +100,7 @@ void GLWidget::initializeGL()
     glBindTexture(GL_TEXTURE_2D, 0);
 
     QImage image2;
-    bool success2 = image2.load(QString::fromStdString("/gpfs/main/home/kzliu/course/cs123/hmm/images/stone.png"));
+    bool success2 = image2.load(QString::fromStdString("/gpfs/main/home/kzliu/course/cs123/final/particleScene123/images/stone.png"));
     qDebug() << success2;
 
     glGenTextures(1,&m_textureID_stone);
@@ -263,7 +263,7 @@ bool GLWidget::loadOBJ(const char * path,  std::vector<GLfloat> &vertex_vector){
         if ( strcmp( lineHeader, "v" ) == 0 ){
             glm::vec3 vertex;
             fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
-            temp_vertices.push_back(vertex);
+            temp_vertices.push_back(vertex / glm::vec3(50.f));
 
         }else if ( strcmp( lineHeader, "vt" ) == 0 ){
             glm::vec2 uv;
@@ -331,9 +331,9 @@ bool GLWidget::loadOBJ(const char * path,  std::vector<GLfloat> &vertex_vector){
         glm::vec2 uv = temp_uvs[ uvIndex-1 ];
         glm::vec3 tangent = glm::normalize(tangents[vertexIndex-1]);
 
-        vertex_vector.push_back(vertex.x/2.f);
-        vertex_vector.push_back(vertex.y/2.f);
-        vertex_vector.push_back(vertex.z/2.f);
+        vertex_vector.push_back(vertex.x);
+        vertex_vector.push_back(vertex.y);
+        vertex_vector.push_back(vertex.z);
 
         vertex_vector.push_back(uv.x);
         vertex_vector.push_back(uv.y);
