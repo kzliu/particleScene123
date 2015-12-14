@@ -34,7 +34,7 @@ public:
     void update(GLuint &shaderProgramID);
 
     /** Draws the current state */
-    void draw(const GLuint &drawShaderProgram);
+    void draw(GLuint &drawShaderProgram);
 
     /** Setting and binding the active texture */
     void bindActiveTexture(const GLuint &textureID, GLenum textureUnit);

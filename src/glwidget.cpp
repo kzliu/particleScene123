@@ -21,8 +21,15 @@ GLWidget::GLWidget(QGLFormat format, QWidget *parent)
       m_updateProgramID(0),
       m_drawProgramID(0),
       m_FBO1(nullptr), m_FBO2(nullptr),
-      m_textureID(0)
-{ }
+      m_textureID(0),
+      m_timer(this),
+      m_fps(60.0f),
+      m_increment(0)
+{
+    // Set up 60 FPS draw loop.
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(tick()));
+    m_timer.start(1000.0f / m_fps);
+}
 
 GLWidget::~GLWidget()
 {
@@ -80,10 +87,12 @@ void GLWidget::paintGL()
 {
 //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    float time = m_increment++ / (float) m_fps;      // Time in seconds.
+
     float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
     glm::vec2 scale = glm::vec2(s, s*100);
 
-    ParticleSystem *particles = new ParticleSystem(200, 200, this->width(), this->height(), scale[0], scale[1], 50.f, qRgba(255,10,10,10));
+    ParticleSystem *particles = new ParticleSystem(200, 200, this->width(), this->height(), scale[0], scale[1], 40.f, qRgba(100,10,10,255));
 
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
@@ -204,4 +213,10 @@ void GLWidget::resizeGL(int w, int h)
     glViewport(0, 0, w, h);
     m_FBO1.reset(new FramebufferObject(w,h));
     m_FBO2.reset(new FramebufferObject(w,h));
+}
+
+/** Repaints the canvas. Called 60 times per second. */
+void GLWidget::tick()
+{
+    update();
 }

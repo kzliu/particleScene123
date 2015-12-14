@@ -31,6 +31,10 @@ protected:
 
     void resizeGL(int w, int h);
 
+protected slots:
+    /** Repaints the canvas. Called 60 times per second by m_timer. */
+    void tick();
+
 private:
     std::unique_ptr<OpenGLShape> m_square;
 
@@ -45,6 +49,13 @@ private:
     std::unique_ptr<FramebufferObject> m_FBO2;
 
     GLuint m_textureID;
+
+    /** Timer calls tick() 60 times per second. */
+    QTimer m_timer;
+    float m_fps;
+
+    /** Incremented on every call to paintGL. */
+    int m_increment;
 };
 
 #endif // GLWIDGET_H

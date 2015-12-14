@@ -59,8 +59,8 @@ ParticleSystem::ParticleSystem(int texture_width, int texture_height, GLuint can
     for(int y = 0; y < m_particle_texture_height; y++){
         for(int x = 0; x < m_particle_texture_width; x++){
             int i = y * m_particle_texture_width * 2 + x * 2;
-            indices_data[i] = x;
-            indices_data[i + 1] = y;
+            indices_data[i] = (GLfloat) x;
+            indices_data[i + 1] = (GLfloat) y;
         }
     }
 
@@ -145,7 +145,6 @@ void ParticleSystem::initializePositionAndVelocity()
 
     setTextureImage(m_p0_textureID, position_texture);
     setTextureImage(m_v0_textureID, velocity_texture);
-
 }
 
 void ParticleSystem::update(GLuint &shaderProgramID)
@@ -203,12 +202,13 @@ void ParticleSystem::update(GLuint &shaderProgramID)
     m_FBO2->unbind();
 }
 
-void ParticleSystem::draw(const GLuint &drawShaderProgram)
+void ParticleSystem::draw(GLuint &drawShaderProgram)
 {
     // This enables Gl blending the computed fragment colors with the values in the color buffers
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glEnable(GL_PROGRAM_POINT_SIZE);
     // Blinding the default frame buffer (the screen)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glViewport(0, 0, m_canvas_width, m_canvas_height);
@@ -226,12 +226,12 @@ void ParticleSystem::draw(const GLuint &drawShaderProgram)
     glUniform1i(glGetUniformLocation(drawShaderProgram, "velocities"), 1);
 
     // Now we send it specific values
-    glUniform2i(glGetUniformLocation(drawShaderProgram, "statedimensions"), m_particle_texture_width, m_particle_texture_height);
-    glUniform2i(glGetUniformLocation(drawShaderProgram, "worlddimensions"), m_canvas_width, m_canvas_height);
+    glUniform2f(glGetUniformLocation(drawShaderProgram, "statedimensions"), m_particle_texture_width, m_particle_texture_height);
+    glUniform2f(glGetUniformLocation(drawShaderProgram, "worlddimensions"), m_canvas_width, m_canvas_height);
     glUniform1f(glGetUniformLocation(drawShaderProgram, "pscale"), m_scale_p);
     glUniform1f(glGetUniformLocation(drawShaderProgram, "vscale"), m_scale_v);
     glUniform1f(glGetUniformLocation(drawShaderProgram, "particlesize"), m_particle_size);
-    glUniform4i(glGetUniformLocation(drawShaderProgram, "particlecolor"), qRed(m_particle_color), qGreen(m_particle_color), qBlue(m_particle_color), qAlpha(m_particle_color));
+    glUniform4f(glGetUniformLocation(drawShaderProgram, "particlecolor"), (GLfloat)qRed(m_particle_color)/255.f, (GLfloat)qGreen(m_particle_color)/255.f, (GLfloat)qBlue(m_particle_color)/255.f, (GLfloat)qAlpha(m_particle_color)/255.f);
 
     // Now we draw
     m_indices->draw();
