@@ -11,20 +11,23 @@
 #include <iostream>
 #include <QImage>
 #include <QDebug>
+#include <QMouseEvent>
+#include <QWheelEvent>
 #include "openglshape.h"
 #include "ParticleSystem.h"
+#include "cauldron.h"
 
 GLWidget::GLWidget(QGLFormat format, QWidget *parent)
     : QGLWidget(format, parent),
+      m_width(width()), m_height(height()),
       m_square(nullptr),
-      m_solidProgramID(0),
-      m_gradientProgramID(0),
-      m_textureProgramID(0),
-      m_updateProgramID(0),
+      m_solidProgramID(0), m_gradientProgramID(0), m_textureProgramID(0), m_updateProgramID(0),
       m_drawProgramID(0),
       m_FBO1(nullptr), m_FBO2(nullptr),
       m_textureID(0),
       m_textureID_stone(0), m_noiseTexture(0),
+      m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f),
+      m_cauldron(nullptr),
       m_timer(this),
       m_fps(10.f),
       m_increment(0),
@@ -47,6 +50,7 @@ GLWidget::~GLWidget()
 void GLWidget::initializeGL()
 {
     ResourceLoader::initializeGlew();
+    glEnable(GL_DEPTH_TEST);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Defines the color the screen will be cleared to.
 
     // Creates the three shader programs.
@@ -106,11 +110,22 @@ void GLWidget::initializeGL()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glm::mat4 model = glm::mat4(0.05f, 0.0, 0.0, 0.0,
+                                0.0, 0.05f, 0.0, 0.0,
+                                0.0, 0.0, 0.05f, 0.0,
+                                0.0, 0.0, 0.0, 1.f);
+    m_cauldron.reset(new cauldron(this->width(), this->height(), m_view, m_projection, model, m_vertex_vector, m_textureID, m_textureID_stone));
 }
 
 void GLWidget::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glm::mat4 model = glm::mat4(0.05f, 0.0, 0.0, 0.0,
+                                0.0, 0.05f, 0.0, 0.0,
+                                0.0, 0.0, 0.05f, 0.0,
+                                0.0, 0.0, 0.0, 1.f);
+//    cauldron *caul = new cauldron(this->width(), this->height(), m_view, m_projection, model, m_vertex_vector);
+
 
 //    float time = m_increment++ / (float) m_fps;      // Time in seconds
     float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
@@ -119,35 +134,44 @@ void GLWidget::paintGL()
 
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
-        GLuint m_colorTextureID;
-        glGenTextures(1, &m_colorTextureID);
-        glBindTexture(GL_TEXTURE_2D, m_colorTextureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width(), this->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        m_FBO1->attach(m_colorTextureID);
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glUseProgram(m_gradientProgramID);
-
-        m_square->draw();
-
-        glBindTexture(GL_TEXTURE_2D, m_colorTextureID);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        m_particles->update(m_updateProgramID);
-        m_particles->draw(m_drawProgramID);
+        m_cauldron->update(this->width(), this->height(), m_view, m_projection, model);
+        m_cauldron->render();
+
+
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        GLuint m_colorTextureID;
+//        glGenTextures(1, &m_colorTextureID);
+//        glBindTexture(GL_TEXTURE_2D, m_colorTextureID);
+//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width(), this->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+//        m_FBO1->attach(m_colorTextureID);
+
+
+//        glUseProgram(m_gradientProgramID);
+
+//        m_square->draw();
+
+//        glBindTexture(GL_TEXTURE_2D, m_colorTextureID);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+
+
+
         break;
 
     case GRADIENT_SHADER_PROGRAM:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        m_particles->update(m_updateProgramID);
+        m_particles->draw(m_drawProgramID);
         // TODO (Task 5): Draw the square using m_gradientProgramID.
-        glUseProgram(m_gradientProgramID);
-        m_square->draw();
+//        glUseProgram(m_gradientProgramID);
+//        m_square->draw();
         break;
     case TEXTURE_SHADER_PROGRAM:
 //        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -167,14 +191,49 @@ void GLWidget::paintGL()
 
 void GLWidget::resizeGL(int w, int h)
 {
-    glViewport(0, 0, w, h);
+    m_width = w;
+    m_height = h;
+
+    glViewport(0, 0, m_width, m_height);
+
     m_FBO1.reset(new FramebufferObject(w,h));
     m_FBO2.reset(new FramebufferObject(w,h));
+
+    rebuildMatrices();
 }
 
 /** Repaints the canvas. Called 60 times per second. */
 void GLWidget::tick()
 {
+    update();
+}
+
+void GLWidget::mousePressEvent(QMouseEvent *event)
+{
+    m_prevMousePos = event->pos();
+}
+
+void GLWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    m_angleX += 100 * (event->x() - m_prevMousePos.x()) / (float) width();
+    m_angleY += 100 * (event->y() - m_prevMousePos.y()) / (float) height();
+    m_prevMousePos = event->pos();
+    rebuildMatrices();
+}
+
+void GLWidget::wheelEvent(QWheelEvent *event)
+{
+    m_zoom -= event->delta() / 20.f;
+    rebuildMatrices();
+}
+
+void GLWidget::rebuildMatrices()
+{
+    m_view = glm::translate(glm::vec3(0, 0, -m_zoom)) *
+             glm::rotate(m_angleY, glm::vec3(1,0,0)) *
+             glm::rotate(m_angleX, glm::vec3(0,1,0));
+
+    m_projection = glm::perspective(0.8f, (float)width()/height(), 0.1f, 1000.f);
     update();
 }
 
@@ -272,9 +331,9 @@ bool GLWidget::loadOBJ(const char * path,  std::vector<GLfloat> &vertex_vector){
         glm::vec2 uv = temp_uvs[ uvIndex-1 ];
         glm::vec3 tangent = glm::normalize(tangents[vertexIndex-1]);
 
-        vertex_vector.push_back(vertex.x);
-        vertex_vector.push_back(vertex.y);
-        vertex_vector.push_back(vertex.z);
+        vertex_vector.push_back(vertex.x/2.f);
+        vertex_vector.push_back(vertex.y/2.f);
+        vertex_vector.push_back(vertex.z/2.f);
 
         vertex_vector.push_back(uv.x);
         vertex_vector.push_back(uv.y);

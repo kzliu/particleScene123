@@ -196,6 +196,7 @@ void ParticleSystem::update(GLuint &shaderProgramID)
 void ParticleSystem::draw(GLuint &drawShaderProgram)
 {
     // This enables Gl blending the computed fragment colors with the values in the color buffers
+    //        glDepthMask(GL_FALSE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -204,7 +205,7 @@ void ParticleSystem::draw(GLuint &drawShaderProgram)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glViewport(0, 0, m_canvas_width, m_canvas_height);
 //    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // We bind the position and velocity textures to specific locations to be read by the shader
     bindActiveTexture(m_p0_textureID, 0);
