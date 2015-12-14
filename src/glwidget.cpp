@@ -8,7 +8,8 @@
 #include "glm/gtx/transform.hpp"  // glm::translate, scale, rotate
 #include "glm/gtc/type_ptr.hpp"   // glm::value_ptr
 
-//#include <QImage>
+#include <iostream>
+#include <QImage>
 #include "openglshape.h"
 #include "ParticleSystem.h"
 
@@ -152,4 +153,141 @@ void GLWidget::resizeGL(int w, int h)
 void GLWidget::tick()
 {
     update();
+}
+
+//parser
+bool GLWidget::loadOBJ(const char * path,  std::vector<GLfloat> &vertex_vector){
+
+    std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
+    std::vector< glm::vec3 > temp_vertices;
+    std::vector< glm::vec2 > temp_uvs;
+    std::vector< glm::vec3 > temp_normals;
+
+
+    FILE * file = fopen(path, "r");
+    if(file == NULL ){
+        std::cout << "Could not load file." << std::endl;
+        return false;
+    }
+
+    while(1){
+
+        char lineHeader[128];
+        // read the first word of the line
+        int res = fscanf(file, "%s", lineHeader);
+        if (res == EOF)
+            break;
+
+        if ( strcmp( lineHeader, "v" ) == 0 ){
+            glm::vec3 vertex;
+            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+            temp_vertices.push_back(vertex);
+
+        }else if ( strcmp( lineHeader, "vt" ) == 0 ){
+            glm::vec2 uv;
+            fscanf(file, "%f %f\n", &uv.x, &uv.y );
+            temp_uvs.push_back(uv);
+
+        }else if ( strcmp( lineHeader, "vn" ) == 0 ){
+            glm::vec3 normal;
+            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
+            temp_normals.push_back(normal);
+
+        }else if ( strcmp( lineHeader, "f" ) == 0 ){
+            //std::string vertex1, vertex2, vertex3;
+            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0],
+                    &vertexIndex[1], &uvIndex[1], &normalIndex[1],
+                    &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+
+            if (matches != 9){
+                std::cout << "matches error" << std::endl;
+                return false;
+            }
+
+            vertexIndices.push_back(vertexIndex[0]);
+            vertexIndices.push_back(vertexIndex[1]);
+            vertexIndices.push_back(vertexIndex[2]);
+
+            uvIndices.push_back(uvIndex[0]);
+            uvIndices.push_back(uvIndex[1]);
+            uvIndices.push_back(uvIndex[2]);
+
+            normalIndices.push_back(normalIndex[0]);
+            normalIndices.push_back(normalIndex[1]);
+            normalIndices.push_back(normalIndex[2]);
+        }
+    }
+
+    assert(vertexIndices.size() == normalIndices.size());
+
+    //calculate tangents
+
+    glm::vec3 tangents[vertexIndices.size()] = {glm::vec3(0)};
+    for (unsigned int i = 0; i < vertexIndices.size(); i+=3){
+        unsigned int vertexIndex = vertexIndices[i];
+        unsigned int vertexIndex1 = vertexIndices[i+1];
+        unsigned int vertexIndex2 = vertexIndices[i+2];
+        unsigned int uvIndex = uvIndices[i];
+        unsigned int uvIndex1 = uvIndices[i+1];
+        unsigned int uvIndex2 = uvIndices[i+2];
+
+
+        glm::vec3 tangent = calculateTan(temp_vertices[vertexIndex-1], temp_vertices[vertexIndex1-1], temp_vertices[vertexIndex2-1], temp_uvs[uvIndex-1], temp_uvs[uvIndex1-1], temp_uvs[uvIndex2-1]);
+        tangents[vertexIndex-1] += tangent;
+        tangents[vertexIndex1-1] += tangent;
+        tangents[vertexIndex2-1] += tangent;
+    }
+
+    for(unsigned int i=0; i<vertexIndices.size(); i++ ){
+        unsigned int vertexIndex = vertexIndices[i];
+        unsigned int normalIndex = normalIndices[i];
+        unsigned int uvIndex = uvIndices[i];
+
+        glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
+        glm::vec3 normal = temp_normals[ normalIndex-1 ];
+        glm::vec2 uv = temp_uvs[ uvIndex-1 ];
+        glm::vec3 tangent = glm::normalize(tangents[vertexIndex-1]);
+
+        vertex_vector.push_back(vertex.x);
+        vertex_vector.push_back(vertex.y);
+        vertex_vector.push_back(vertex.z);
+
+        vertex_vector.push_back(uv.x);
+        vertex_vector.push_back(uv.y);
+
+        vertex_vector.push_back(normal.x);
+        vertex_vector.push_back(normal.y);
+        vertex_vector.push_back(normal.z);
+
+        vertex_vector.push_back(tangent.x);
+        vertex_vector.push_back(tangent.y);
+        vertex_vector.push_back(tangent.z);
+
+    }
+
+    return true;
+}
+
+glm::vec3 GLWidget::calculateTan(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec2 uv0, glm::vec2 uv1, glm::vec2 uv2){
+
+     glm::vec3 tangent = {glm::vec3(0.f)};
+
+    glm::vec3 Edge1 = v1 - v0;
+    glm::vec3 Edge2 = v2 - v0;
+
+    float DeltaU1 = uv1.x - uv0.x;
+    float DeltaV1 = uv1.y - uv0.y;
+    float DeltaU2 = uv2.x - uv0.x;
+    float DeltaV2 = uv2.y - uv0.y;
+
+    float f = 1.0f / (DeltaU1 * DeltaV2 - DeltaU2 * DeltaV1);
+
+    tangent.x = f * (DeltaV2 * Edge1.x - DeltaV1 * Edge2.x);
+    tangent.y = f * (DeltaV2 * Edge1.y - DeltaV1 * Edge2.y);
+    tangent.z = f * (DeltaV2 * Edge1.z - DeltaV1 * Edge2.z);
+
+    return tangent;
+
+
 }
