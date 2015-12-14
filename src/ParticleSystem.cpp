@@ -179,8 +179,8 @@ void ParticleSystem::update(GLuint &shaderProgramID)
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-//    m_FBO2->attach(m_v1_textureID);
+//    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    m_FBO2->attach(m_v1_textureID);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //    glUseProgram(0);
