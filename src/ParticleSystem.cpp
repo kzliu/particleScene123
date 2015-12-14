@@ -148,7 +148,7 @@ void ParticleSystem::initializePositionAndVelocity()
 
 }
 
-void ParticleSystem::updatePosition(GLuint &shaderProgramID)
+void ParticleSystem::update(GLuint &shaderProgramID)
 {
     // This disables Gl blending the computed fragment colors with the values in the color buffers
     glDisable(GL_BLEND);
@@ -201,12 +201,6 @@ void ParticleSystem::updatePosition(GLuint &shaderProgramID)
     glBindTexture(GL_TEXTURE_2D,0);
     glUseProgram(0);
     m_FBO2->unbind();
-}
-
-void ParticleSystem::updateVelocity(GLuint &shaderProgramID)
-{
-    glUniform1f(glGetUniformLocation(shaderProgramID, "random"), rand() % 2 - 1.f);
-    glUniform1i(glGetUniformLocation(shaderProgramID, "derivative"), 1);
 }
 
 void ParticleSystem::draw(const GLuint &drawShaderProgram, OpenGLShape points)

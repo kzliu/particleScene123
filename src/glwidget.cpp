@@ -121,7 +121,7 @@ void GLWidget::paintGL()
 
 //        glUseProgram(0);
 
-        particles->updatePosition(m_updateProgramID);
+        particles->update(m_updateProgramID);
 
 //        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

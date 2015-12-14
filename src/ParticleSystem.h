@@ -31,10 +31,7 @@ public:
     void swapTextures();
 
     /** Updates the particle system position */
-    void updatePosition(GLuint &shaderProgramID);
-
-    /** Updates the particle system velocity */
-    void updateVelocity(GLuint &shaderProgramID);
+    void update(GLuint &shaderProgramID);
 
     /** Draws the current state */
     void draw(const GLuint &drawShaderProgram, OpenGLShape points);
