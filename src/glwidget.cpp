@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <QImage>
+#include <QDebug>
 #include "openglshape.h"
 #include "ParticleSystem.h"
 
@@ -23,10 +24,12 @@ GLWidget::GLWidget(QGLFormat format, QWidget *parent)
       m_drawProgramID(0),
       m_FBO1(nullptr), m_FBO2(nullptr),
       m_textureID(0),
+      m_textureID_stone(0), m_noiseTexture(0),
       m_timer(this),
       m_fps(10.f),
       m_increment(0),
-      m_particles(nullptr)
+      m_particles(nullptr),
+      m_vertex_vector{}
 {
     // Set up 60 FPS draw loop.
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(tick()));
@@ -76,13 +79,33 @@ void GLWidget::initializeGL()
     m_square->setAttribute(1, 3, GL_FLOAT, GL_FALSE, 32, 12);
     m_square->setAttribute(2, 2, GL_FLOAT, GL_FALSE, 32, 24);
 
-    // TODO (Task 6): Initialize texture map.
-    QImage image(":/images/ostrich.jpg");
+    qDebug() << loadOBJ("/gpfs/main/home/kzliu/course/cs123/hmm/cauldron_uv.obj", m_vertex_vector);
+
+    QImage image;
+    bool success = image.load(QString::fromStdString("/gpfs/main/home/kzliu/course/cs123/hmm/images/normal_stone.png"));
+    qDebug() << success;
+
     glGenTextures(1,&m_textureID);
     glBindTexture(GL_TEXTURE_2D, m_textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    QImage image2;
+    bool success2 = image2.load(QString::fromStdString("/gpfs/main/home/kzliu/course/cs123/hmm/images/stone.png"));
+    qDebug() << success2;
+
+    glGenTextures(1,&m_textureID_stone);
+    glBindTexture(GL_TEXTURE_2D, m_textureID_stone);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image2.width(), image2.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image2.bits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void GLWidget::paintGL()

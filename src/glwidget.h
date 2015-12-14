@@ -60,6 +60,8 @@ private:
     std::unique_ptr<FramebufferObject> m_FBO2;
 
     GLuint m_textureID;
+    GLuint m_textureID_stone;
+    GLuint m_noiseTexture;
 
     /** Timer calls tick() 60 times per second. */
     QTimer m_timer;
@@ -69,6 +71,7 @@ private:
     int m_increment;
 
     std::unique_ptr<ParticleSystem> m_particles;
+    std::vector<GLfloat> m_vertex_vector;
 };
 
 #endif // GLWIDGET_H
