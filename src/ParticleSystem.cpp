@@ -129,8 +129,8 @@ void ParticleSystem::initializePositionAndVelocity()
 
     for (unsigned int y = 0; y < m_particle_texture_height; y++) {
         for (unsigned int x = 0; x < m_particle_texture_width; x++){
-            glm::vec2 p_x = encode(rand() % m_canvas_width, m_scale_p);
-            glm::vec2 p_y = encode(0.5 * m_canvas_height, m_scale_p);
+            glm::vec2 p_x = encode(rand() % (int)floor(m_canvas_width/3) + floor(m_canvas_width/3) , m_scale_p);
+            glm::vec2 p_y = encode(rand() % (int)floor(m_canvas_width/3) + floor(m_canvas_height*2/3), m_scale_p);
             glm::vec2 v_x = encode(rand() % 2 - 1, m_scale_v);
             glm::vec2 v_y = encode((rand() % 2), m_scale_v); //why is this negative?
 
@@ -238,6 +238,9 @@ void ParticleSystem::bindActiveTexture(const GLuint &textureID, GLenum textureUn
     if(textureUnit > 0)
     {
         glActiveTexture(GL_TEXTURE0 + textureUnit);
+    }
+    else {
+        glActiveTexture(GL_TEXTURE0);
     }
     glBindTexture(GL_TEXTURE_2D, textureID);
 }

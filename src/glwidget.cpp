@@ -94,7 +94,6 @@ void GLWidget::paintGL()
 
 //    float time = m_increment++ / (float) m_fps;      // Time in seconds
 
-
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
         GLuint m_colorTextureID;
@@ -153,5 +152,5 @@ void GLWidget::resizeGL(int w, int h)
 /** Repaints the canvas. Called 60 times per second. */
 void GLWidget::tick()
 {
-    paintGL();
+    update();
 }
