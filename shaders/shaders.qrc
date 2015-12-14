@@ -9,5 +9,19 @@
         <file>update.frag</file>
         <file>draw.frag</file>
         <file>draw.vert</file>
+        <file>ambient.frag</file>
+        <file>ambient.vert</file>
+        <file>color.frag</file>
+        <file>color.vert</file>
+        <file>depth.frag</file>
+        <file>depth.vert</file>
+        <file>myPhong.frag</file>
+        <file>normal.frag</file>
+        <file>normal.vert</file>
+        <file>position.frag</file>
+        <file>position.vert</file>
+        <file>quad.vert</file>
+        <file>phong.frag</file>
+        <file>phong.vert</file>
     </qresource>
 </RCC>

@@ -46,7 +46,21 @@ OTHER_FILES += \
     shaders/texture.vert \
     shaders/update.frag\
     shaders/draw.frag \
-    shaders/draw.vert
+    shaders/draw.vert \
+    shaders/phong.frag \
+    shaders/phong.vert \
+    shaders/quad.vert \
+    shaders/ambient.frag \
+    shaders/ambient.vert \
+    shaders/depth.vert \
+    shaders/depth.frag \
+    shaders/position.frag \
+    shaders/position.vert \
+    shaders/normal.frag \
+    shaders/normal.vert \
+    shaders/myPhong.frag \
+    shaders/color.vert \
+    shaders/color.frag
 
 RESOURCES += \
     shaders/shaders.qrc \

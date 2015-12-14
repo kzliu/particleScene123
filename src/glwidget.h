@@ -6,11 +6,16 @@
 #else
 #include "GL/glu.h"
 #endif
+#include "glm/glm.hpp"            // glm::vec*, mat*, and basic glm functions
+#include "glm/gtx/transform.hpp"  // glm::translate, scale, rotate
+#include "glm/gtc/type_ptr.hpp"   // glm::value_ptr
 
+#include <iostream>
 #include <memory>
 #include <QGLWidget>
 #include <QTimer>
-#include "FramebufferObject.h"
+
+#include "FramebufferObject.h";
 
 class OpenGLShape;
 
@@ -32,6 +37,10 @@ protected:
     void paintGL();
 
     void resizeGL(int w, int h);
+
+    bool loadOBJ(const char * path,  std::vector<GLfloat> &vertex_vector);
+
+    glm::vec3 calculateTan(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec2 uv0, glm::vec2 uv1, glm::vec2 uv2);
 
 protected slots:
     /** Repaints the canvas. Called 60 times per second by m_timer. */
