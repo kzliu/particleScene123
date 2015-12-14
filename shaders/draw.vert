@@ -6,7 +6,7 @@ uniform sampler2D positions;
 uniform sampler2D velocities;
 uniform vec2 statedimensions;
 uniform vec2 worlddimensions;
-uniform float size;
+uniform float particlesize;
 uniform float pscale;
 uniform float vscale;
 
@@ -40,6 +40,6 @@ void main() {
     velocity = vec2(vx,vy);
 
     gl_Position = vec4(p / worlddimensions * 2.0 - 1.0, 0, 1);
-    gl_PointSize = size;
+    gl_PointSize = particlesize;
 }
 

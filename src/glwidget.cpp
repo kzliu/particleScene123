@@ -42,7 +42,7 @@ void GLWidget::initializeGL()
     m_gradientProgramID = ResourceLoader::createShaderProgram(":/shaders/gradient.vert", ":/shaders/gradient.frag");
     m_textureProgramID = ResourceLoader::createShaderProgram(":/shaders/texture.vert", ":/shaders/texture.frag");
     m_updateProgramID = ResourceLoader::createShaderProgram(":/shaders/texture.vert", ":/shaders/update.frag");
-    m_drawProgramID = ResourceLoader::createShaderProgram(":/shaders/texture.vert", ":/shaders/update.frag");
+    m_drawProgramID = ResourceLoader::createShaderProgram(":/shaders/draw.vert", ":/shaders/draw.frag");
 
     // Smart pointer!
     m_square.reset(new OpenGLShape());
@@ -122,6 +122,7 @@ void GLWidget::paintGL()
 //        glUseProgram(0);
 
         particles->update(m_updateProgramID);
+        particles->draw(m_drawProgramID);
 
 //        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

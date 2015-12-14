@@ -5,7 +5,7 @@
 #include <memory>
 
 
-ParticleSystem::ParticleSystem(int texture_width, int texture_height, GLuint canvas_width, GLuint canvas_height, GLuint scale_p, GLuint scale_v, GLuint particle_size, QRgb particle_color)
+ParticleSystem::ParticleSystem(int texture_width, int texture_height, GLuint canvas_width, GLuint canvas_height, GLuint scale_p, GLuint scale_v, GLfloat particle_size, QRgb particle_color)
     : m_p0_textureID(0),
       m_p1_textureID(0),
       m_v0_textureID(0),
@@ -203,7 +203,7 @@ void ParticleSystem::update(GLuint &shaderProgramID)
     m_FBO2->unbind();
 }
 
-void ParticleSystem::draw(const GLuint &drawShaderProgram, OpenGLShape points)
+void ParticleSystem::draw(const GLuint &drawShaderProgram)
 {
     // This enables Gl blending the computed fragment colors with the values in the color buffers
     glEnable(GL_BLEND);
@@ -230,7 +230,7 @@ void ParticleSystem::draw(const GLuint &drawShaderProgram, OpenGLShape points)
     glUniform2i(glGetUniformLocation(drawShaderProgram, "worlddimensions"), m_canvas_width, m_canvas_height);
     glUniform1f(glGetUniformLocation(drawShaderProgram, "pscale"), m_scale_p);
     glUniform1f(glGetUniformLocation(drawShaderProgram, "vscale"), m_scale_v);
-//    glUniform1f(glGetUniformLocation(drawShaderProgram, "particlesize"), m_particle_size);
+    glUniform1f(glGetUniformLocation(drawShaderProgram, "particlesize"), m_particle_size);
     glUniform4i(glGetUniformLocation(drawShaderProgram, "particlecolor"), qRed(m_particle_color), qGreen(m_particle_color), qBlue(m_particle_color), qAlpha(m_particle_color));
 
     // Now we draw

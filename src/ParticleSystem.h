@@ -16,7 +16,7 @@ class FramebufferObject;
 class ParticleSystem
 {
 public:
-    ParticleSystem(int texture_width, int texture_height, GLuint canvas_width, GLuint canvas_height, GLuint scale_p, GLuint scale_v, GLuint particle_size, QRgb particle_color);
+    ParticleSystem(int texture_width, int texture_height, GLuint canvas_width, GLuint canvas_height, GLuint scale_p, GLuint scale_v, GLfloat particle_size, QRgb particle_color);
 
     /** Encodes a value given the scale */
     glm::vec2 encode(GLuint value, GLuint scale);
@@ -34,7 +34,7 @@ public:
     void update(GLuint &shaderProgramID);
 
     /** Draws the current state */
-    void draw(const GLuint &drawShaderProgram, OpenGLShape points);
+    void draw(const GLuint &drawShaderProgram);
 
     /** Setting and binding the active texture */
     void bindActiveTexture(const GLuint &textureID, GLenum textureUnit);
@@ -66,7 +66,7 @@ private:
     GLuint m_scale_p;
     GLuint m_scale_v;
 
-    GLuint m_particle_size;
+    GLfloat m_particle_size;
     QRgb m_particle_color;
 
     std::unique_ptr<FramebufferObject> m_FBO1;
