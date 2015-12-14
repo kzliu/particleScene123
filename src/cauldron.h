@@ -13,7 +13,7 @@
 #include <memory>  // std::unique_ptr
 
 class OpenGLShape;
-class FramebufferObject;
+class FBO;
 
 class cauldron
 {
@@ -52,11 +52,12 @@ private:
     std::unique_ptr<OpenGLShape> m_quad;
     std::unique_ptr<OpenGLShape> m_cauldron;
 
-    std::unique_ptr<FramebufferObject> m_positionFBO;
-    std::unique_ptr<FramebufferObject> m_normalFBO;
-    std::unique_ptr<FramebufferObject> m_depthFBO;
-    std::unique_ptr<FramebufferObject> m_ambientFBO;
-    std::unique_ptr<FramebufferObject> m_stoneUVFBO;
+    std::unique_ptr<FBO> m_positionFBO;
+    std::unique_ptr<FBO> m_normalFBO;
+    std::unique_ptr<FBO> m_depthFBO;
+    std::unique_ptr<FBO> m_ambientFBO;
+    std::unique_ptr<FBO> m_stoneUVFBO;
+    std::unique_ptr<FBO> m_FBO1;
 
 
     glm::mat4 m_view, m_projection, m_model;

@@ -21,7 +21,9 @@ SOURCES += src/settings.cpp \
     src/openglshape.cpp \
     glew-1.10.0/src/glew.c \
     src/FramebufferObject.cpp \
-    src/ParticleSystem.cpp
+    src/ParticleSystem.cpp \
+    src/FBO.cpp \
+    src/cauldron.cpp
 
 
 HEADERS += \
@@ -33,7 +35,9 @@ HEADERS += \
     src/openglshape.h \
     glew-1.10.0/include/GL/glew.h \
     src/FramebufferObject.h \
-    src/ParticleSystem.h
+    src/ParticleSystem.h \
+    src/FBO.h \
+    src/cauldron.h
 
 FORMS += src/mainwindow.ui
 

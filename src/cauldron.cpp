@@ -4,8 +4,8 @@
 #include <iostream>
 
 #include "openglshape.h"
-#include "framebufferobject.h"
-#include "sphere.h"
+#include "FBO.h"
+
 #include <QDebug>
 
 cauldron::cauldron(int width, int height, glm::mat4 &view, glm::mat4 &projection, glm::mat4 &model, std::vector<GLfloat> &vertex_vector, GLuint &normalID, GLuint &textureID) :
@@ -14,7 +14,7 @@ cauldron::cauldron(int width, int height, glm::mat4 &view, glm::mat4 &projection
     m_textureID(normalID), m_textureID_stone(textureID), m_noiseTexture(0),
     m_quad(nullptr), m_cauldron(nullptr),
     m_positionFBO(nullptr), m_normalFBO(nullptr), m_depthFBO(nullptr), m_ambientFBO(nullptr), m_stoneUVFBO(nullptr),
-    m_view(view), m_projection(projection), m_model(model),
+    m_FBO1(nullptr), m_view(view), m_projection(projection), m_model(model),
     m_vertex_vector(vertex_vector)
 {
 
@@ -27,6 +27,8 @@ cauldron::~cauldron() {
 
 void cauldron::initialize(){
     ResourceLoader::initializeGlew();
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     //shaders
     m_normalProgram = ResourceLoader::createShaderProgram(
                 ":/shaders/normal.vert", ":/shaders/normal.frag");
@@ -104,17 +106,18 @@ void cauldron::update(int width, int height, glm::mat4 view, glm::mat4 projectio
     m_projection = projection;
     m_model = model;
 
-    m_depthFBO.reset(new FramebufferObject(m_width,m_height));
-    m_positionFBO.reset(new FramebufferObject(m_width,m_height));
-    m_normalFBO.reset(new FramebufferObject(m_width,m_height));
-    m_ambientFBO.reset(new FramebufferObject(m_width,m_height));
-    m_stoneUVFBO.reset(new FramebufferObject(m_width,m_height));
+    m_depthFBO.reset(new FBO(m_width,m_height));
+    m_positionFBO.reset(new FBO(m_width,m_height));
+    m_normalFBO.reset(new FBO(m_width,m_height));
+    m_ambientFBO.reset(new FBO(m_width,m_height));
+    m_stoneUVFBO.reset(new FBO(m_width,m_height));
+    m_FBO1.reset(new FBO(m_width,m_height));
 }
 
 void cauldron::render(){
     //SSAO
 
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_stoneUVFBO->bind();
 
 //    glUseProgram(m_stoneUVProgram);
