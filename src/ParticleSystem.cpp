@@ -65,7 +65,7 @@ ParticleSystem::ParticleSystem(int texture_width, int texture_height, GLuint can
     }
 
     m_indices->setVertexData(indices_data, indices_size*sizeof(GLfloat), GL_POINTS, indices_size / 2);
-    m_indices->setAttribute(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    m_indices->setAttribute(0, 2, GL_FLOAT, GL_FALSE, 8, 0);
 }
 
 glm::vec2 ParticleSystem::encode(GLuint value, GLuint scale)
@@ -181,7 +181,7 @@ void ParticleSystem::update(GLuint &shaderProgramID)
 
 //    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     m_FBO2->attach(m_v1_textureID);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //    glUseProgram(0);
 

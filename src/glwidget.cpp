@@ -83,7 +83,7 @@ void GLWidget::paintGL()
     float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
     glm::vec2 scale = glm::vec2(s, s*100);
 
-    ParticleSystem *particles = new ParticleSystem(200, 200, this->width(), this->height(), scale[0], scale[1], 5, qRgba(255,0,0,0));
+    ParticleSystem *particles = new ParticleSystem(200, 200, this->width(), this->height(), scale[0], scale[1], 50.f, qRgba(255,10,10,10));
 
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:
