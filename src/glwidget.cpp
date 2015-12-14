@@ -83,10 +83,10 @@ void GLWidget::initializeGL()
     m_square->setAttribute(1, 3, GL_FLOAT, GL_FALSE, 32, 12);
     m_square->setAttribute(2, 2, GL_FLOAT, GL_FALSE, 32, 24);
 
-    qDebug() << loadOBJ("/gpfs/main/home/kzliu/course/cs123/final/particleScene123/cauldron_uv.obj", m_vertex_vector);
+    qDebug() << loadOBJ("/gpfs/main/home/omadarik/course/cs123/final/particleScene123/cauldron_uv.obj", m_vertex_vector);
 
     QImage image;
-    bool success = image.load(QString::fromStdString("/gpfs/main/home/kzliu/course/cs123/final/particleScene123/images/normal_stone.png"));
+    bool success = image.load(QString::fromStdString("/gpfs/main/home/omadarik/course/cs123/final/particleScene123/images/normal_stone.png"));
     qDebug() << success;
 
     glGenTextures(1,&m_textureID);
@@ -130,7 +130,7 @@ void GLWidget::paintGL()
 //    float time = m_increment++ / (float) m_fps;      // Time in seconds
     float s = floor(pow(255, 2) / std::max(this->width(), this->height()) / 3);
     glm::vec2 scale = glm::vec2(s, s*100);
-    m_particles.reset(new ParticleSystem(20, 10, this->width(), this->height(), scale[0], scale[1], 10.f, qRgba(100,100,100,150)));
+    m_particles.reset(new ParticleSystem(200, 10, this->width(), this->height(), scale[0], scale[1], 20.f, qRgba(100,100,100,150)));
 
     switch (settings.shaderProgram) {
     case SOLID_SHADER_PROGRAM:

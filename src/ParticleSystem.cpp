@@ -196,7 +196,7 @@ void ParticleSystem::update(GLuint &shaderProgramID)
 void ParticleSystem::draw(GLuint &drawShaderProgram)
 {
     // This enables Gl blending the computed fragment colors with the values in the color buffers
-    //        glDepthMask(GL_FALSE);
+    glDepthMask(GL_FALSE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
