@@ -12,6 +12,6 @@ out vec4 WorldSpace_position;
 
 void main()
 {
-    WorldSpace_position = (model * (vec4(ObjectSpace_position))).xyz;
+    WorldSpace_position = (model * (vec4(ObjectSpace_position, 1.0)));
     gl_Position = projection * view * model * vec4(ObjectSpace_position, 1.0);
 }
