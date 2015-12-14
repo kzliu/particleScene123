@@ -19,6 +19,7 @@ GLWidget::GLWidget(QGLFormat format, QWidget *parent)
       m_gradientProgramID(0),
       m_textureProgramID(0),
       m_updateProgramID(0),
+      m_drawProgramID(0),
       m_FBO1(nullptr), m_FBO2(nullptr),
       m_textureID(0)
 { }
@@ -41,6 +42,7 @@ void GLWidget::initializeGL()
     m_gradientProgramID = ResourceLoader::createShaderProgram(":/shaders/gradient.vert", ":/shaders/gradient.frag");
     m_textureProgramID = ResourceLoader::createShaderProgram(":/shaders/texture.vert", ":/shaders/texture.frag");
     m_updateProgramID = ResourceLoader::createShaderProgram(":/shaders/texture.vert", ":/shaders/update.frag");
+    m_drawProgramID = ResourceLoader::createShaderProgram(":/shaders/texture.vert", ":/shaders/update.frag");
 
     // Smart pointer!
     m_square.reset(new OpenGLShape());
