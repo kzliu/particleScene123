@@ -148,11 +148,14 @@ void ParticleSystem::initializePositionAndVelocity()
 
 void ParticleSystem::update(GLuint &shaderProgramID)
 {
+    m_FBO2.reset(new FramebufferObject(m_particle_texture_width,m_particle_texture_height));
     // This disables Gl blending the computed fragment colors with the values in the color buffers
     glDisable(GL_BLEND);
 
-    m_FBO2->attach(m_p1_textureID);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_FBO2->attach(m_p1_textureID);
 
     glUseProgram(shaderProgramID);
 
@@ -203,9 +206,9 @@ void ParticleSystem::draw(GLuint &drawShaderProgram)
     glEnable(GL_PROGRAM_POINT_SIZE);
     // Blinding the default frame buffer (the screen)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glViewport(0, 0, m_canvas_width, m_canvas_height);
+
 //    glClearColor(0, 0, 0, 1);
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // We bind the position and velocity textures to specific locations to be read by the shader
     bindActiveTexture(m_p0_textureID, 0);
@@ -227,10 +230,10 @@ void ParticleSystem::draw(GLuint &drawShaderProgram)
     glUniform4f(glGetUniformLocation(drawShaderProgram, "particlecolor"), (GLfloat)qRed(m_particle_color)/255.f, (GLfloat)qGreen(m_particle_color)/255.f, (GLfloat)qBlue(m_particle_color)/255.f, (GLfloat)qAlpha(m_particle_color)/255.f);
 
     // Now we draw
-
+    glViewport(0, 0, m_canvas_width, m_canvas_height);
     m_indices->draw();
 
-    glBindTexture(GL_TEXTURE_2D,0);
+//    glBindTexture(GL_TEXTURE_2D,0);
 
     glUseProgram(0);
 }

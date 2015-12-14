@@ -165,7 +165,7 @@ void GLWidget::paintGL()
         break;
 
     case GRADIENT_SHADER_PROGRAM:
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         m_particles->update(m_updateProgramID);
         m_particles->draw(m_drawProgramID);
